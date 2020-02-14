@@ -1,9 +1,12 @@
 import React from "react";
 import { ThemeContext } from "./modules/ThemeContext";
-import { Store } from "./modules/Store";
+import { Store, ContextStore, WpData } from "./modules/Store";
 import { sortDataPosts } from "./modules/wpApiFetch";
 import { Grid, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+
+import { AppStateAction } from "./modules/appStateReducer";
+import { WpDataAction } from "./modules/wpDataReducer";
 
 const useStyles = makeStyles({
     root: {
@@ -21,13 +24,14 @@ const useStyles = makeStyles({
     }
 });
 
-const PMainContainer = ({presenter}) => {
+
+const PMainContainer = ({presenter}: any) => {
     const classes = useStyles();
     const { elevation } = React.useContext(ThemeContext);
 
     const { wpData, dispatchWpData, dispatchAppState } = React.useContext(Store);
     const articles = sortDataPosts(wpData.articles);
-    const setAndOpenArticleModal = data => {
+    const setAndOpenArticleModal = (data: object[]) => {
         dispatchWpData({type: "SET_SINGLE_ARTICLE", payload: data})
         dispatchAppState({ type: "OPEN_ARTICLE_MODAL"})
     }
@@ -44,6 +48,10 @@ const PMainContainer = ({presenter}) => {
 
 }
 
+type Props = {
+
+}
+
 const PMainPresenter = ({
     wpData,
   classes,
@@ -54,7 +62,7 @@ const PMainPresenter = ({
   let displayArticles;
 
   if (articles) {
-    displayArticles = articles.map((value, key) => (
+    displayArticles = articles.map((value: object, key: number) => (
       <Grid item key={key} className={classes.item}>
         <Paper
           className={classes.article}

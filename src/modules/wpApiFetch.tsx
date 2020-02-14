@@ -81,7 +81,16 @@ export function wpApiToData({
              });
          });
        }
-export function sortDataPosts(data) {
+export type articles = [
+    {
+        title: string,
+        excerpt: string,
+        content: string,
+        link: string,
+        featuredImg: string
+    }
+] | null;
+export function sortDataPosts(data): articles{
     console.log(data);
     
   let articles = [];

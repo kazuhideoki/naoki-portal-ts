@@ -12,7 +12,7 @@ const useStyles = makeStyles({
     }
 });
 
-export const PHeader = props => {
+export const PHeader = () => {
   const classes = useStyles();
 
   return (

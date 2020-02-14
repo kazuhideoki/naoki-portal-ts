@@ -1,11 +1,12 @@
-const initAppState = {
-  setModal: "magazines",
-  isModalOpen: false,
-//   setArticleModal: 0,
-  isArticleModalOpen: false
-};
+import { AppState } from './Store'
 
-export function appStateReducer(state, action) {
+export type AppStateAction = 
+    { type: "OPEN_MODAL", payload: string } |
+    { type: "CLOSE_MODAL" } |
+    { type: "OPEN_ARTICLE_MODAL" } |
+    { type: "CLOSE_ARTICLE_MODAL" }
+
+export function appStateReducer(state: AppState, action: AppStateAction) {
   switch (action.type) {
     case "OPEN_MODAL":
     return {

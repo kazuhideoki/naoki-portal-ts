@@ -38,14 +38,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const AppContainer = ({presenter})=> {
+const AppContainer = ({presenter}: any)=> {
     const classes = useStyles();
     const { wpParams, dispatchWpData, setTotalPages } = React.useContext(Store);
-    const setArticles = data =>
+    const setArticles = (data: object[]) =>
         dispatchWpData({ type: "SET_ARTICLES", payload: data });
-    const setTags = data =>
+    const setTags = (data: object[]) =>
         dispatchWpData({ type: "SET_TAGS", payload: data });
-    const setUsers = data =>
+    const setUsers = (data: object[]) =>
         dispatchWpData({ type: "SET_USERS", payload: data });
 
     const props = {
