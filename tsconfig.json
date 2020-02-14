@@ -20,6 +20,6 @@
     "jsx": "react"
   },
   "include": [
-    "src"
+    "src", "src2/serviceWorker.ts", "src2/react-app-env.d.ts", "src2/setupTests.ts"
   ]
 }
