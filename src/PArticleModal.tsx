@@ -2,6 +2,7 @@ import React from 'react'
 import { Store } from './modules/Store';
 import { getWpSinglePosts, sortDataPosts } from "./modules/wpApiFetch";
 import { modifyAtags } from "./modules/modifyAtags";
+import { TransitionProps } from '@material-ui/core/transitions';
 import {
   Paper,
   Dialog,
@@ -12,8 +13,8 @@ import {
 } from "@material-ui/core";
 import { HighlightOff } from "@material-ui/icons";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const StyledDialog = withStyles({
@@ -34,8 +35,24 @@ const StyledHighlightOff = withStyles({
 })(HighlightOff);
 
 
+export type SetSingleArticle = (data: any) => void
+export type GetAndShowLinkPage = (data: any) => void
 
-const PArticleModalContainer = ({presenter}) => {
+type Props = {
+    articleModal: [{
+        title: string;
+        excerpt: string;
+        content: string;
+        link: string;
+        featuredImg: string;
+    }],
+    isArticleModalOpen: boolean
+    closeArticleModal: () => void
+    getAndShowLinkPage: GetAndShowLinkPage
+
+};
+
+const PArticleModalContainer = ({presenter}:any) => {
     const {
       wpData,
       dispatchWpData,
@@ -55,9 +72,9 @@ const PArticleModalContainer = ({presenter}) => {
     const isArticleModalOpen = appState.isArticleModalOpen
     const closeArticleModal = () => dispatchAppState({ type: "CLOSE_ARTICLE_MODAL" });
     
-    const setSingleArticle = data =>
+    const setSingleArticle = (data: any) =>
       dispatchWpData({ type: "SET_SINGLE_ARTICLE", payload: data });
-    const getAndShowLinkPage = slug =>{
+    const getAndShowLinkPage = (slug: string) =>{
       getWpSinglePosts({ slug, setSingleArticle });
     }
 
@@ -77,7 +94,7 @@ const PArticleModalPresenter = ({
   isArticleModalOpen,
   closeArticleModal,
   getAndShowLinkPage,
-}) => {
+}: Props) => {
   let singleArticle;
   let content;
   if (articleModal.length) {
@@ -116,6 +133,6 @@ const PArticleModalPresenter = ({
 
 export const PArticleModal = () => (
   <PArticleModalContainer
-    presenter={props => <PArticleModalPresenter {...props} />}
+        presenter={(props: Props) => <PArticleModalPresenter {...props} />}
   />
 );

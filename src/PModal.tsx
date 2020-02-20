@@ -1,15 +1,18 @@
 import React, { useContext } from "react";
-import { ThemeContext } from "./modules/ThemeContext";
-import { Store } from "./modules/Store";
-import { sortDataTags, sortDataUsers} from "./modules/wpApiFetch";
+import { ThemeContext, ThemeContextProps } from "./modules/ThemeContext";
+import { Store, WpParams } from "./modules/Store";
+import { sortDataTags, SortDataTags, sortDataUsers, SortDataUsers } from "./modules/wpApiFetch";
+import { Tag, Author } from "./modules/wpParamsReducer";
+import { AppState } from "./modules/Store";
+
 import { Button, Paper, Dialog, Slide, withStyles } from "@material-ui/core";
 import {
-  ImportContacts,
-  Wifi,
-  PersonAdd,
-  FreeBreakfastTwoTone,
-  ListTwoTone
+    ImportContacts,
+    FreeBreakfastTwoTone,
+    ListTwoTone
 } from "@material-ui/icons";
+import { TransitionProps } from '@material-ui/core/transitions';
+
 import treatmentIcon from "./img/menu-treatment.png";
 import menuDrink from "./img/drink-img.jpg";
 import menu from "./img/menu-img.jpg";
@@ -17,9 +20,8 @@ import menuTreatment from "./img/menu-treatment-img.jpg";
 import googleQr from "./img/review_qr_google.png";
 import facebookQr from "./img/review_qr_facebook.png";
 
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-return <Slide direction="up" ref={ref} {...props} />;
+const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
 });
 
 
@@ -32,7 +34,20 @@ const StyledDialog = withStyles({
     }
 })(Dialog);
 
-const PModalContainer = ({presenter}) => {
+type Props = {
+    wpParams: WpParams,
+    tags: SortDataTags
+    authors: SortDataUsers
+    theme: ThemeContextProps,
+    setModal: AppState["setModal"],
+    isModalOpen: AppState["isModalOpen"]
+    openModal: (name: string) => void,
+    closeModal: () => void,
+    changeParamsAndClose: ({ type, payload }: ChangeParamsAndClose) => void
+}
+type ChangeParamsAndClose = Tag | Author
+
+const PModalContainer = ({presenter}: any) => {
     const theme = useContext(ThemeContext);
       const { wpParams, wpData, dispatchWpParams, appState, dispatchAppState } = React.useContext(
         Store
@@ -41,14 +56,14 @@ const PModalContainer = ({presenter}) => {
     const authors = sortDataUsers(wpData.users);
     const setModal = appState.setModal;
     const isModalOpen = appState.isModalOpen
-    const openModal = name => {
+    const openModal = (name: string) => {
         dispatchAppState({ type: "OPEN_MODAL", payload: name });
     }
     const closeModal = () => {
       dispatchAppState({ type: "CLOSE_MODAL" });
     };
-    const changeParamsAndClose = (type, payload) => {
-        dispatchWpParams({ type: type, payload: payload});
+    const changeParamsAndClose = ({ type, payload }: ChangeParamsAndClose) => {
+        dispatchWpParams({ type: type, payload: payload })
         dispatchAppState({ type: "CLOSE_MODAL" });
     }
 
@@ -75,18 +90,18 @@ const PModalPresenter = ({
   openModal,
   closeModal,
   changeParamsAndClose,
-}) => {
+}: Props) => {
   let modal;
   switch (setModal) {
     case "magazines":
       modal = (
         <Paper>
           Magzter
-          <a href="fb179689808731959://" alt="">
+          <a href="fb179689808731959://" >
             <ImportContacts style={theme.icon} />
           </a>
           楽天マガジン
-          <a href="rmagazine://" alt="">
+          <a href="rmagazine://" >
             <ImportContacts style={theme.icon} />
           </a>
         </Paper>
@@ -139,27 +154,31 @@ const PModalPresenter = ({
       } else {
         tagsLang = tags.tagsEn;
       }
-      const tagsWrap = tagsLang.map((value, key) => (
-        <Button key={key} onClick={ () => changeParamsAndClose("TAG", value.id)}>
+      const tagsWrap = tagsLang.map((value, key) => {
+          const payload = value.id
+          const type = "TAG"
+          return <Button key={key} onClick={() => changeParamsAndClose({ type, payload})}>
           {value.name}
         </Button>
-      ));
+      });
       modal = <Paper>{tagsWrap}</Paper>;
 
       break;
     case "author":
       var auhtorsWrap = authors
-        .filter(function(value) {
+          .filter(function (value) {
           if (value.name === "Naoki Hair Dressing") {
             return false; // skip
           }
           return true;
         })
-        .map((value, key) => (
-          <Button key={key} onClick={ () => changeParamsAndClose("AUTHOR", value.id)}>
-            {value.name}
+        .map((value, key) => {
+            const payload = value.id
+            const type = "AUTHOR"
+            return <Button key={key} onClick={() => changeParamsAndClose({type, payload})}>
+                <img src={value.img} alt=""/>{value.name}
           </Button>
-        ));
+        });
       modal = <Paper>{auhtorsWrap}</Paper>;
 
       break;
@@ -181,6 +200,6 @@ const PModalPresenter = ({
 
 export const PModal = () => (
   <PModalContainer
-    presenter={props => <PModalPresenter {...props} />}
+        presenter={(props: Props) => <PModalPresenter {...props} />}
   />
 );

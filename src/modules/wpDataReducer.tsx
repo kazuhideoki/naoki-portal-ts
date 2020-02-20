@@ -1,26 +1,32 @@
 import { WpData } from './Store'
+import { reducerLogger } from "./reducerLogger";
 
-export type WpDataAction = 
-    { type: "SET_ARTICLES"; payload: object[]} |
-    { type: "SET_SINGLE_ARTICLE"; payload: object[]} |
-    { type: "SET_TAGS"; payload: object[]} |
-    { type: "SET_USERS"; payload: object[]} 
+export type WpDataAction =  
+    { type: "SET_ARTICLES"; payload: any[] } |
+    { type: "SET_SINGLE_ARTICLE"; payload: any[]} |
+    { type: "SET_TAGS"; payload: any[]} |
+    { type: "SET_USERS"; payload: any[]} 
 
 export function wpDataReducer(state: WpData, action: WpDataAction) {
-         switch (action.type) {
-           case "SET_ARTICLES":
-                console.log("SET_ARTICLES " + state.articles);       
-             return { ...state, articles: action.payload }
-           case "SET_SINGLE_ARTICLE":
-               console.log("SET_SINGLE_ARTICLE" + action.payload);
-             return { ...state, articleModal: action.payload };
-           case "SET_TAGS":
-             return { ...state, tags: action.payload };
-           case "SET_USERS":
-             return { ...state, users: action.payload };
-
-           default:
-               console.log("エラーだよ,wpDataReducer");
-             return { ...state }
-         }
-       }
+    let newState
+    const func = wpDataReducer
+        switch (action.type) {
+        case "SET_ARTICLES":
+                newState = { ...state, articles: action.payload }
+                break
+        case "SET_SINGLE_ARTICLE":
+                newState = { ...state, articleModal: action.payload };
+                break
+        case "SET_TAGS":
+                newState = { ...state, tags: action.payload };
+                break
+        case "SET_USERS":
+                newState = { ...state, users: action.payload };
+                break
+        default:
+            console.log("エラーだよ,wpDataReducer");
+                newState = { ...state }
+        }
+    reducerLogger({ state, newState, func, action})
+    return newState
+    }

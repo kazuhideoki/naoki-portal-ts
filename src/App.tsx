@@ -6,7 +6,7 @@ import {PHeader} from "./PHeader";
 import { PMain } from "./PMain";
 import { PFooter } from "./PFooter";
 import { PPagination } from "./PPagination";
-import { Store } from "./modules/Store";
+import { Store, WpParams, SetTotalPages } from "./modules/Store";
 import { PArticleModal } from "./PArticleModal";
 import { getWpPosts, getWpTags, getWpUsers } from "./modules/wpApiFetch";
 
@@ -38,14 +38,27 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+export type SetArticles = (data: any) => void
+export type SetTags = (data: any) => void
+export type SetUsers = (data: any) => void
+
+type Props = {
+    classes: Record<"root" | "header" | "main" | "footer", string>
+    wpParams: WpParams
+    setArticles: SetArticles
+    setTags: SetTags,
+    setUsers: SetUsers,
+    setTotalPages: SetTotalPages
+}
+
 const AppContainer = ({presenter}: any)=> {
     const classes = useStyles();
     const { wpParams, dispatchWpData, setTotalPages } = React.useContext(Store);
-    const setArticles = (data: object[]) =>
+    const setArticles = (data: any) =>
         dispatchWpData({ type: "SET_ARTICLES", payload: data });
-    const setTags = (data: object[]) =>
+    const setTags = (data: any) =>
         dispatchWpData({ type: "SET_TAGS", payload: data });
-    const setUsers = (data: object[]) =>
+    const setUsers = (data: any) =>
         dispatchWpData({ type: "SET_USERS", payload: data });
 
     const props = {
@@ -66,19 +79,19 @@ const AppPresenter = ({
   setTags,
   setUsers,
   setTotalPages
-}) => {
+}: Props) => {
+
   React.useEffect(() => {
     getWpPosts({ wpParams, setArticles, setTotalPages });
   }, [wpParams]);
 
-  React.useEffect(() => {
-    getWpTags({ setTags });
+  React.useEffect(() => {          
+     getWpTags(setTags);
   }, []);
   React.useEffect(() => {
-    getWpUsers({ setUsers });
+    getWpUsers(setUsers);
   }, []);
-
-//   console.log("Appだよ");
+  
   return (
     <Grid
       spacing={0}
@@ -104,5 +117,5 @@ const AppPresenter = ({
 };
 
 export const App = () => (
-  <AppContainer presenter={props => <AppPresenter {...props} />} />
+    <AppContainer presenter={(props: Props) => <AppPresenter {...props} />} />
 );

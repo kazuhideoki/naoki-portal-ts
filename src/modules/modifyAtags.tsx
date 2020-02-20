@@ -1,4 +1,6 @@
-export const modifyAtags = getAndShowLinkPage => {
+import { GetAndShowLinkPage } from "../PArticleModal";
+
+export const modifyAtags = (getAndShowLinkPage: GetAndShowLinkPage) => {
          setTimeout(() => {
            let atags = document.getElementsByTagName("a");
 

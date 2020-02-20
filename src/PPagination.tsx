@@ -1,5 +1,6 @@
 import React from 'react'
-import { Store } from "./modules/Store";
+import { Store, WpParams} from "./modules/Store";
+import { WpParamsAction } from "./modules/wpParamsReducer";
 import {
     Home,
   FirstPage,
@@ -10,41 +11,40 @@ import {
   Person
 } from "@material-ui/icons";
 
-const PPaginationContainer = ({presenter}) => {
+type Props = {
+    wpParams: WpParams
+    openModal: (modalName: string) => void
+    totalPages: number
+    dispatchWpParams: React.Dispatch<WpParamsAction>
+}
+
+const PPaginationContainer = ({ presenter }: any) => {
     const { wpParams, dispatchWpParams, dispatchAppState, totalPages } = React.useContext(
       Store
     );
 
-    const changeParams = (type, payload) => {
-        if (payload) {
-            dispatchWpParams({ type: type, payload: payload });
-        }else{
-            dispatchWpParams({type: type})
-        }
-    }
-
-    const openModal = modalName =>
+    const openModal = (modalName: string) =>
         dispatchAppState({ type: "OPEN_MODAL", payload: modalName });
 
     const props = {
         wpParams,
-        changeParams,
         openModal,
-        totalPages
+        totalPages,
+        dispatchWpParams
     };
 
     return presenter(props)
 }
 
 const PPaginationPresenter = ({
-  wpParams,
-  changeParams,
-  openModal,
-  totalPages
-}) => {
+    wpParams,
+    openModal,
+    totalPages,
+    dispatchWpParams,
+}: Props) => {
   const page = wpParams.currentPage;
 
-  const home = <Home onClick={ () => changeParams("HOME")} />;
+    const home = <Home onClick={() => dispatchWpParams({ type: "MAINHOME" })} />;
   const tag = <Label onClick={ () => openModal("tag")} />;
 
   const author = <Person onClick={ () => openModal("author")} />;
@@ -55,20 +55,20 @@ const PPaginationPresenter = ({
     </>
   );
 
-  let [latest, prev, next, oldest] = "";
+  let latest, prev, next, oldest
 
   //  ページ数が3より大きい場合latestとoldestを表示
   if (page > 3 && totalPages > 3) {
-    latest = <FirstPage onClick={ () => changeParams("LATEST")} />;
+      latest = <FirstPage onClick={() => dispatchWpParams({ type: "LATEST" })} />;
   }
   if (!(page === 1)) {
-    prev = <NavigateBefore onClick={ () => changeParams("PREV")} />;
+      prev = <NavigateBefore onClick={() => dispatchWpParams({ type: "PREV" })} />;
   }
   if (!(page === totalPages)) {
-    next = <NavigateNext onClick={ () => changeParams("NEXT")} />;
+      next = <NavigateNext onClick={() => dispatchWpParams({ type: "NEXT" })} />;
   }
   if (page < totalPages - 2 && totalPages > 3) {
-    oldest = <LastPage onClick={ () => changeParams("OLDEST", totalPages)} />;
+      oldest = <LastPage onClick={() => dispatchWpParams({ type: "OLDEST", payload: totalPages })} />;
   }
 
   const number1 = page - 2;
@@ -88,7 +88,7 @@ const PPaginationPresenter = ({
       return <button key={num}>{num}</button>;
     }
     return (
-      <button key={num} onClick={ () => changeParams("NUM", num)}>
+        <button key={num} onClick={() => dispatchWpParams({ type: "NUM", payload: num })}>
         {num}
       </button>
     );
@@ -110,5 +110,5 @@ const PPaginationPresenter = ({
 };
 
 export const PPagination = () => (
-    <PPaginationContainer presenter={props => <PPaginationPresenter {...props} />} />
+    <PPaginationContainer presenter={(props: Props) => <PPaginationPresenter {...props} />} />
 );

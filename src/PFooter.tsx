@@ -11,6 +11,7 @@ import {
 } from "@material-ui/icons";
 import { ThemeContext } from "./modules/ThemeContext";
 import { Store } from "./modules/Store";
+import { ThemeContextProps } from "./modules/ThemeContext";
 
 const useStyle = makeStyles({
   root: {
@@ -24,34 +25,40 @@ const useStyle = makeStyles({
   }
 });
 
-const PFooterContainer = ({presenter}) => {
+type Props = {
+    classes: Record<"root" | "icon", string>,
+    theme: ThemeContextProps,
+    changeLang: () => void,
+    openModal: (modalName: string) => void
+};
+
+const PFooterContainer = ({presenter}: any) => {
     const classes = useStyle();
-    const elevation = classes.elevation;
     const theme = useContext(ThemeContext);
     const { dispatchWpParams, dispatchAppState } = useContext(Store);
 
-    const changeParams = (type) => {
-        dispatchWpParams({ type: type });
+    const changeLang = () => {
+        dispatchWpParams({ type: "LANG" });
     }
-    const openModal = modalName =>
+    const openModal = (modalName: string) =>
       dispatchAppState({ type: "OPEN_MODAL", payload: modalName });
 
     const props = {
         classes,
-      theme,
-      changeParams,
-      openModal
+        theme,
+        changeLang,
+        openModal
     };
 
     return presenter(props)
 }
-const PFooterPresenter = ({ classes, theme, changeParams, openModal }) => {
+const PFooterPresenter = ({ classes, theme, changeLang, openModal }: Props) => {
          return (
            <Paper elevation={theme.elevation} className={classes.root}>
              <Grid container justify="center">
                <Grid item>
                  <Translate
-                   onClick={ () => changeParams("LANG")}
+                    onClick={() => changeLang()}
                    color="primary"
                    style={theme.icon}
                  />
@@ -92,6 +99,6 @@ const PFooterPresenter = ({ classes, theme, changeParams, openModal }) => {
        };
 export const PFooter = () => (
   <PFooterContainer
-    presenter={props => <PFooterPresenter {...props} />}
+        presenter={(props: Props) => <PFooterPresenter {...props} />}
   />
 );

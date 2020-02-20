@@ -1,50 +1,63 @@
 import { WpParams } from './Store'
-
-export type WpParamsAction = |
-    { type: "HOME" } |
-    { type: "LATEST" } |
-    { type: "PREV" } |
-    { type: "NEXT" } |
-    { type: "OLDEST", payload: number | null } |
-    { type: "NUM", payload: number | null } |
-    { type: "TAG", payload: number | null } |
-    { type: "AUTHOR", payload: number | null } |
-    { type: "LANG" }
+import { reducerLogger } from "./reducerLogger";
+export type MainHome = { type: "MAINHOME"}
+export type Latest = { type: "LATEST" }
+export type Prev ={ type: "PREV" } 
+export type Next = { type: "NEXT" } 
+export type Oldest = { type: "OLDEST", payload: number } 
+export type Num = { type: "NUM", payload: number } 
+export type Tag = { type: "TAG", payload: string } 
+export type Author = { type: "AUTHOR", payload: string } 
+export type Lang = { type: "LANG" }
+export type WpParamsAction = MainHome | Latest | Prev | Next | Oldest | Num | Tag | Author | Lang
 
 
 
 export function wpParamsReducer(state: WpParams, action: WpParamsAction) {
+    let newState
+    const func = wpParamsReducer
     switch (action.type) {
-    case "HOME":
-        return { ...state, currentPage: 1, author: null, tag: null };
+    case "MAINHOME":
+        newState = { ...state, currentPage: 1, author: null, tag: null }
+            break
     case "LATEST":
-        return { ...state, currentPage: 1 };
+        newState = { ...state, currentPage: 1 }
+            break
     case "PREV":
         const n = Number(state.currentPage)
-        return { ...state, currentPage: n - 1 };
-    case "NEXT":
+        newState = { ...state, currentPage: n - 1 };
+            break
+    case "NEXT": 
         const m = Number(state.currentPage)
-        return { ...state, currentPage: m + 1 };
+        newState = { ...state, currentPage: m + 1 };
+            break
     case "OLDEST":
-        return { ...state, currentPage: action.payload };
+        newState = { ...state, currentPage: action.payload };
+            break
     case "NUM":
-        return { ...state, currentPage: action.payload };
+        newState = { ...state, currentPage: action.payload };
+            break
     case "TAG":
-        return { ...state, tag: action.payload, author: null, currentPage: 1 };
+        newState = { ...state, tag: action.payload, author: null, currentPage: 1 };
+            break
     case "AUTHOR":
-        return { ...state, author: action.payload, tag: null, currentPage: 1 };
+            newState = { ...state, author: action.payload, tag: null, currentPage: 1 };
+            break
     case "LANG":
-        return {
+        newState = {
             ...state,
             isJa: !state.isJa,
             currentPage: 1,
             author: null,
             tag: null
         };
+        break
 
     default:
         console.log("エラーだよ,wpDataReducer");
-        return { ...state };
+        newState = { ...state };
 }
+    reducerLogger({ state, newState, func, action })
+    return newState
 }
 

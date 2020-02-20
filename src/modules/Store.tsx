@@ -7,14 +7,15 @@ import { AppStateAction, appStateReducer } from "./appStateReducer";
 
 const initParams: WpParams = {
     currentPage: 1,
-    author: 1,
-    tag: 1,
+    author: '',
+    tag: '',
     isJa: false,
 };
 export type WpParams = {
-    currentPage: number | null,
-    author: number | null,
-    tag: number | null,
+    // currentPage: number | null,
+    currentPage: number,
+    author: number | string | null,
+    tag: number | string | null,
     isJa: boolean,
 }
 
@@ -24,36 +25,36 @@ const initWpData: WpData = {
   tags: [],
   users: []
 };
+// export type WpData = typeof initWpData
 export type WpData = {
-    articles: object[]
-    articleModal: object[]
-    tags: object[]
-    users: object[]
-}
+    articles: any[],
+    articleModal: any[],
+    tags: any[],
+    users: any[]
+};
 
-
-const initAppState: AppState = {
+const initAppState = {
     setModal: 'magazines',
     isModalOpen: false,
     isArticleModalOpen: false,
 }
-export type AppState = {
-    setModal: string
-    isModalOpen: boolean,
-    isArticleModalOpen: boolean,
-}
+export type AppState = typeof initAppState
+
+export type DispatchWpParams = React.Dispatch<WpParamsAction>
+export type DispatchWpData = React.Dispatch < WpDataAction >
+export type DispatchAppState = React.Dispatch < AppStateAction >
+export type SetTotalPages = React.Dispatch < React.SetStateAction < number >>
 
 export type ContextProps = {
     wpParams: WpParams
-    dispatchWpParams: React.Dispatch<WpParamsAction>
+    dispatchWpParams: DispatchWpParams
     wpData: WpData
-    dispatchWpData: React.Dispatch<WpDataAction>
+    dispatchWpData: DispatchWpData
     appState: AppState
-    dispatchAppState: React.Dispatch<AppStateAction>
+    dispatchAppState: DispatchAppState
     totalPages: number
-    setTotalPages: React.Dispatch<React.SetStateAction<number>>
+    setTotalPages: SetTotalPages
 }
-
 const Store = React.createContext({} as ContextProps);
 
 const StoreContextProvider = ({children}: any) => {

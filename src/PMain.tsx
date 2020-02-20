@@ -1,7 +1,8 @@
 import React from "react";
 import { ThemeContext } from "./modules/ThemeContext";
-import { Store, ContextStore, WpData } from "./modules/Store";
-import { sortDataPosts } from "./modules/wpApiFetch";
+import { Store, WpData } from "./modules/Store";
+import { ThemeContextProps } from "./modules/ThemeContext";
+import { sortDataPosts, SortDataPosts, setAuthorName, formatDate } from "./modules/wpApiFetch";
 import { Grid, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
@@ -24,31 +25,38 @@ const useStyles = makeStyles({
     }
 });
 
+type Props = {
+    wpData: WpData,
+    classes: Record<"root" | "item" | "article" | "img", string>
+    elevation: ThemeContextProps["elevation"],
+    articles: SortDataPosts,
+    setAndOpenArticleModal: (data: object[]) => void
+}
 
 const PMainContainer = ({presenter}: any) => {
     const classes = useStyles();
     const { elevation } = React.useContext(ThemeContext);
 
     const { wpData, dispatchWpData, dispatchAppState } = React.useContext(Store);
-    const articles = sortDataPosts(wpData.articles);
+    // 利用するデータを抜き出し、authorをnumberから名前に変える
+    let articles = sortDataPosts(wpData.articles);
+        articles = setAuthorName(articles, wpData)
+        articles = formatDate(articles)
+
     const setAndOpenArticleModal = (data: object[]) => {
         dispatchWpData({type: "SET_SINGLE_ARTICLE", payload: data})
         dispatchAppState({ type: "OPEN_ARTICLE_MODAL"})
     }
     
-    const props = {
+    const props: Props = {
         wpData,
-      classes,
-      elevation,
-      articles,
-      setAndOpenArticleModal
+        classes,
+        elevation,
+        articles,
+        setAndOpenArticleModal
     };
 
     return presenter(props)
-
-}
-
-type Props = {
 
 }
 
@@ -58,11 +66,11 @@ const PMainPresenter = ({
   elevation,
   articles,
   setAndOpenArticleModal
-}) => {
+}: Props) => {
   let displayArticles;
 
   if (articles) {
-    displayArticles = articles.map((value: object, key: number) => (
+      displayArticles = articles.map((value, key: number) => (
       <Grid item key={key} className={classes.item}>
         <Paper
           className={classes.article}
@@ -70,6 +78,9 @@ const PMainPresenter = ({
           elevation={elevation}
         >
           <h2>{value.title}</h2>
+          <h3>{value.authorName}</h3>
+          <h3>{value.date}</h3>
+
           <div dangerouslySetInnerHTML={{ __html: value.excerpt }} />
           <img
             className={classes.img}
@@ -90,6 +101,6 @@ const PMainPresenter = ({
   );
 };
 export const PMain = () => (
-    <PMainContainer presenter={ props => <PMainPresenter {...props} />}/>
+    <PMainContainer presenter={ (props:Props) => <PMainPresenter {...props} />}/>
 )
 
