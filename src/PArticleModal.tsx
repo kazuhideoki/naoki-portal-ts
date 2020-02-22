@@ -1,6 +1,7 @@
 import React from 'react'
 import { Store } from './modules/Store';
-import { getWpSinglePosts, sortDataPosts } from "./modules/wpApiFetch";
+import { getWpSinglePosts } from "./modules/wpApiFetch";
+import { sortDataPosts } from "./modules/organaizeData";
 import { modifyAtags } from "./modules/modifyAtags";
 import { TransitionProps } from '@material-ui/core/transitions';
 import {
@@ -11,7 +12,7 @@ import {
   Slide,
   withStyles
 } from "@material-ui/core";
-import { HighlightOff } from "@material-ui/icons";
+import { HighlightOff, ImportExport } from "@material-ui/icons";
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

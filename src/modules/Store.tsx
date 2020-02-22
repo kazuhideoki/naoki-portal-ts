@@ -7,13 +7,14 @@ import { AppStateAction, appStateReducer } from "./appStateReducer";
 
 const initParams: WpParams = {
     currentPage: 1,
+    categories: 24,
     author: '',
     tag: '',
     isJa: false,
 };
 export type WpParams = {
-    // currentPage: number | null,
     currentPage: number,
+    categories: number,
     author: number | string | null,
     tag: number | string | null,
     isJa: boolean,
@@ -21,13 +22,16 @@ export type WpParams = {
 
 const initWpData: WpData = {
   articles: [],
+  articlesImportantEn: [],
+  articlesImportantJa: [],
   articleModal: [],
   tags: [],
   users: []
 };
-// export type WpData = typeof initWpData
 export type WpData = {
     articles: any[],
+    articlesImportantEn: any[]
+    articlesImportantJa: any[]
     articleModal: any[],
     tags: any[],
     users: any[]

@@ -1,13 +1,12 @@
 import React from "react";
 import { ThemeContext } from "./modules/ThemeContext";
-import { Store, WpData } from "./modules/Store";
+import { Store, WpData, WpParams } from "./modules/Store";
 import { ThemeContextProps } from "./modules/ThemeContext";
-import { sortDataPosts, SortDataPosts, setAuthorName, formatDate } from "./modules/wpApiFetch";
+import { formatDate } from "./modules/organaizeData";
+import { sortDataPosts, SortDataPosts, setAuthorName } from "./modules/organaizeData";
+
 import { Grid, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-
-import { AppStateAction } from "./modules/appStateReducer";
-import { WpDataAction } from "./modules/wpDataReducer";
 
 const useStyles = makeStyles({
     root: {
@@ -26,6 +25,7 @@ const useStyles = makeStyles({
 });
 
 type Props = {
+    wpParams: WpParams
     wpData: WpData,
     classes: Record<"root" | "item" | "article" | "img", string>
     elevation: ThemeContextProps["elevation"],
@@ -37,7 +37,7 @@ const PMainContainer = ({presenter}: any) => {
     const classes = useStyles();
     const { elevation } = React.useContext(ThemeContext);
 
-    const { wpData, dispatchWpData, dispatchAppState } = React.useContext(Store);
+    const { wpParams, wpData, dispatchWpData, dispatchAppState } = React.useContext(Store);
     // 利用するデータを抜き出し、authorをnumberから名前に変える
     let articles = sortDataPosts(wpData.articles);
         articles = setAuthorName(articles, wpData)
@@ -49,6 +49,7 @@ const PMainContainer = ({presenter}: any) => {
     }
     
     const props: Props = {
+        wpParams,
         wpData,
         classes,
         elevation,
@@ -61,6 +62,7 @@ const PMainContainer = ({presenter}: any) => {
 }
 
 const PMainPresenter = ({
+    wpParams,
     wpData,
   classes,
   elevation,
@@ -68,8 +70,18 @@ const PMainPresenter = ({
   setAndOpenArticleModal
 }: Props) => {
   let displayArticles;
-
-  if (articles) {
+  if (articles && wpParams.categories === 187) {
+      displayArticles = articles.map((value, key: number) => (      <Grid item key={key} className={classes.item}>
+          <Paper
+              className={classes.article}
+              elevation={elevation}
+          >
+              <h3>{value.date}</h3>
+              <div dangerouslySetInnerHTML={{ __html: value.content }} />
+          </Paper>
+      </Grid>
+      ))
+  } else if (articles) {
       displayArticles = articles.map((value, key: number) => (
       <Grid item key={key} className={classes.item}>
         <Paper

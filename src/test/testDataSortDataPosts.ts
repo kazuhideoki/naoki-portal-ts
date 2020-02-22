@@ -1,4 +1,4 @@
-import { SortDataPosts } from "../modules/wpApiFetch";
+import { SortDataPosts } from "../modules/organaizeData";
 export const sortDataPosts: SortDataPosts = [
     {
         "title": "Important Notices",

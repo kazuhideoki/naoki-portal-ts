@@ -1,8 +1,8 @@
 import {
-    setAuthorName, sortDataPosts, formatDate
-} from "./wpApiFetch";
-import { sortDataPosts as articles } from "../testData/testDataSortDataPosts";
-import { wpData } from "../testData/testDataWpData";
+    setAuthorName, formatDate
+} from "../modules/wpApiFetch";
+import { sortDataPosts as articles } from "./testDataSortDataPosts";
+import { wpData } from "./testDataWpData";
 
 
 describe('wpApiFetch.tsx', () => {
@@ -17,5 +17,8 @@ describe('wpApiFetch.tsx', () => {
             const result = formatDate(articles)
             expect(result[0].date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/)
         });
+    });
+    describe('getWpInstaPost()', () => {
+        it.todo('記事のカテゴリーがinstagram');
     });
 });

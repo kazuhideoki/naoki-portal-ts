@@ -1,11 +1,11 @@
 import React from "react";
 
 const themes = {
-  icon: { 
-    fontSize: 100
-  },
-  // Paperのかげの程度を設定
-  elevation: 3
+    icon: { 
+        fontSize: 100
+    },
+    // Paperのかげの程度を設定
+    elevation: 3
 };
 
 export type ThemeContextProps = {

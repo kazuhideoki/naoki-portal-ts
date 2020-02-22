@@ -8,7 +8,8 @@ import {
   NavigateNext,
   LastPage,
   Label,
-  Person
+  Person,
+    Instagram
 } from "@material-ui/icons";
 
 type Props = {
@@ -48,6 +49,7 @@ const PPaginationPresenter = ({
   const tag = <Label onClick={ () => openModal("tag")} />;
 
   const author = <Person onClick={ () => openModal("author")} />;
+    const insta = <Instagram onClick={() => dispatchWpParams({ type: "INSTA" })}/>
 
   const pageNumber = (
     <>
@@ -99,6 +101,7 @@ const PPaginationPresenter = ({
       {home}
       {tag}
       {author}
+      {insta}
       {pageNumber}
       {latest}
       {prev}

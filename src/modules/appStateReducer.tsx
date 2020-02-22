@@ -8,7 +8,7 @@ export type AppStateAction =
     { type: "CLOSE_ARTICLE_MODAL" }
 
 export function appStateReducer(state: AppState, action: AppStateAction) {
-    let newState
+    let newState: AppState
     const func = appStateReducer
 switch (action.type) {
     case "OPEN_MODAL":
