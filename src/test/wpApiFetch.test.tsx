@@ -1,6 +1,6 @@
 import {
     setAuthorName, formatDate
-} from "../modules/wpApiFetch";
+} from "../modules/organaizeData";
 import { sortDataPosts as articles } from "./testDataSortDataPosts";
 import { wpData } from "./testDataWpData";
 
