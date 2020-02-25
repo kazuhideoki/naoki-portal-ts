@@ -55,7 +55,6 @@ type Props = {
     setTotalPages: SetTotalPages
 }
 
-const articlesRef = React.createRef()
 const AppContainer = ({presenter}: any)=> {
     const classes = useStyles();
     const { wpParams, dispatchWpData, setTotalPages } = React.useContext(Store);

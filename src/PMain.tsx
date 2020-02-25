@@ -133,5 +133,3 @@ const PMainPresenter = ({
 }
 export const PMain = () => 
     <PMainContainer presenter={ (props:Props) => <PMainPresenter {...props} />}/>
-
-// export default PMain
