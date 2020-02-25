@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createRef } from "react";
 import { Grid, } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import {PModal} from "./PModal";
@@ -55,6 +55,7 @@ type Props = {
     setTotalPages: SetTotalPages
 }
 
+const articlesRef = React.createRef()
 const AppContainer = ({presenter}: any)=> {
     const classes = useStyles();
     const { wpParams, dispatchWpData, setTotalPages } = React.useContext(Store);

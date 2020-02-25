@@ -2,8 +2,8 @@ import React from "react";
 import { Store, WpData } from './modules/Store'
 import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import { formatDate } from "./modules/organaizeData";
-import { sortDataPosts } from "./modules/organaizeData";
+import { formatDate } from "./modules/organizeData";
+import { sortDataPosts } from "./modules/organizeData";
 
 const useStyles = makeStyles({
     root: {

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { ThemeContext, ThemeContextProps } from "./modules/ThemeContext";
 import { Store, WpParams } from "./modules/Store";
-import { sortDataTags, SortDataTags, sortDataUsers, SortDataUsers } from "./modules/organaizeData";
+import { sortDataTags, SortDataTags, sortDataUsers, SortDataUsers } from "./modules/organizeData";
 import { Tag, Author } from "./modules/wpParamsReducer";
 import { AppState } from "./modules/Store";
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Store } from './modules/Store';
 import { getWpSinglePosts } from "./modules/wpApiFetch";
-import { sortDataPosts } from "./modules/organaizeData";
+import { sortDataPosts } from "./modules/organizeData";
 import { modifyAtags } from "./modules/modifyAtags";
 import { TransitionProps } from '@material-ui/core/transitions';
 import {

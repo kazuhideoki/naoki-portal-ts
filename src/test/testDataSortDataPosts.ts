@@ -1,4 +1,4 @@
-import { SortDataPosts } from "../modules/organaizeData";
+import { SortDataPosts } from "../modules/organizeData";
 export const sortDataPosts: SortDataPosts = [
     {
         "title": "Important Notices",

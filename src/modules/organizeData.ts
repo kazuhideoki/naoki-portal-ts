@@ -57,7 +57,7 @@ export function setAuthorName(articles: SortDataPosts, wpData: WpData): SortData
     return result
 }
 
-export function formatDate(articles: SortDataPosts) {
+export function formatDate(articles: SortDataPosts): SortDataPosts {
     const formatedDateData = articles.map((value, index) => {
         const date = value.date
         const dateObj = new Date(date)
@@ -68,6 +68,13 @@ export function formatDate(articles: SortDataPosts) {
     })
     return formatedDateData
 }
+
+// export function setAuthorImg(articles: SortDataPosts): SortDataPosts {
+//     let newArticles: SortDataPosts
+
+
+//     return newArticles
+// }
 
 export type SortDataTags = {
     tagsJa: {
