@@ -74,11 +74,10 @@ const PMainPresenter = ({
     setAndOpenArticleModal
 }: Props) => {
     let displayArticles;
-    const rectRef = React.useRef(null)
-    const [rect, setRect] = React.useState(null)
         //   インスタ表示のときはレイアウトを変える
     if (articles && wpParams.categories === 187) {
-        displayArticles = articles.map((value, key: number) => (      <Grid item key={key} className={classes.item}>
+        displayArticles = articles.map((value, key: number) => (
+        <Grid item key={key} className={classes.item}>
             <Paper
                 className={classes.article}
                 elevation={elevation}
@@ -100,11 +99,12 @@ const PMainPresenter = ({
             })
 
         return (
-            <Grid item key={key} className={classes.item} id={`p_main_` + key} >
+            <Grid item key={key} className={classes.item} >
             <Paper
             className={classes.article}
             onClick={() => setAndOpenArticleModal([wpData.articles[key]])}
             elevation={elevation}
+            id={`p_main_` + key}
             >
             <h2>{value.title} </h2>
             <h3>{value.authorName}</h3>
@@ -130,8 +130,8 @@ const PMainPresenter = ({
         </Grid>
         
     );
-};
-export const PMain = () => (
+}
+export const PMain = () => 
     <PMainContainer presenter={ (props:Props) => <PMainPresenter {...props} />}/>
-)
 
+// export default PMain
