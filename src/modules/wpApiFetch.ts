@@ -55,9 +55,10 @@ export function makeApiParamsUsers(perPage: number) {
 
 export function fetchData(params: string) {
     console.log(params);
-    
-    return fetch(`https://naokihair.com/wp-json/wp/v2/${params}`);
+    const response = fetch(`https://naokihair.com/wp-json/wp/v2/${params}`);
+    return response
 }
+
 type GetTotalPages = (response: any, setTotalPages: SetTotalPages) => void
 export function getTotalPages(response: any, setTotalPages: SetTotalPages) {
   const totalPages = Number(response.headers.get("x-wp-totalpages"));
@@ -105,10 +106,35 @@ export function wpApiToData({
     });
 }
 
+type ResponseToData = {
+    response: any,
+    getTotalPages?: GetTotalPages,
+    setTotalPages?: SetTotalPages,
+}
+
+export function responseToData(response: any) {
+    try {
+        const data = response.json()
+        return data
+    } catch (error) {
+        console.log("catch errorだよ,responseToData " + error);
+    }
+}
+export function responseToTotalPages(response: any) {
+    try {
+        const totalPages = Number(response.headers.get("x-wp-totalpages"));
+        return totalPages
+    } catch (error) {
+        console.log("catch errorだよ,responseToTotalPages " + error);
+    }
+    
+}
+
 type GetWpPosts = {
     wpParams: WpParams
-    setArticles?: (data: object[]) => void
-    setTotalPages?: SetTotalPages
+    setArticles: (data: object[]) => void
+    setTotalPages: SetTotalPages
+    endLoading: () => void
 }
 // メインのpostの記事取得
 export function getWpPosts({ wpParams, setArticles, setTotalPages }: GetWpPosts ) {
@@ -121,6 +147,21 @@ export function getWpPosts({ wpParams, setArticles, setTotalPages }: GetWpPosts 
            setTotalPages
          });
        }
+export async function getWpPosts2({ wpParams, setArticles, setTotalPages, endLoading }: GetWpPosts ) {
+    const params = makeApiParamsPosts(wpParams, 6);
+    const response = await fetchData(params);
+    const data = await responseToData(response)
+    if (data) {
+        setArticles(data)
+    }
+    const totalPages = responseToTotalPages(response)
+    if (totalPages) {
+        setTotalPages(totalPages)
+    }
+    endLoading()
+
+}
+
 export function getWpPostsImportantEn(setArticlesImportantEn: SetArticlesImportantEn) {
     const params = makeApiParamsPostsImportantEn(1);
     const response = fetchData(params);

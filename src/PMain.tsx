@@ -35,13 +35,15 @@ type Props = {
     elevation: ThemeContextProps["elevation"],
     articles: SortDataPosts,
     setAndOpenArticleModal: (data: object[]) => void
+    isLoading: boolean
+    endLoading: () => void
 }
 
 const PMainContainer = ({presenter}: any) => {
     const classes = useStyles();
     const { elevation } = React.useContext(ThemeContext);
 
-    const { wpParams, wpData, dispatchWpData, dispatchAppState } = React.useContext(Store);
+    const { wpParams, wpData, dispatchWpData, appState, dispatchAppState } = React.useContext(Store);
     // 利用するデータを抜き出し、authorをnumberから名前に変える
     let articles = sortDataPosts(wpData.articles);
         articles = setAuthorName(articles, wpData)
@@ -51,6 +53,9 @@ const PMainContainer = ({presenter}: any) => {
         dispatchWpData({type: "SET_SINGLE_ARTICLE", payload: data})
         dispatchAppState({ type: "OPEN_ARTICLE_MODAL"})
     }
+
+    const isLoading = appState.isLoading
+    const endLoading = () => dispatchAppState({type: "END_LOADING"})
     
     const props = {
         wpParams,
@@ -58,7 +63,9 @@ const PMainContainer = ({presenter}: any) => {
         classes,
         elevation,
         articles,
-        setAndOpenArticleModal
+        setAndOpenArticleModal,
+        isLoading,
+        endLoading,
     };
 
     return presenter(props)
@@ -71,22 +78,26 @@ const PMainPresenter = ({
     classes,
     elevation,
     articles,
-    setAndOpenArticleModal
+    setAndOpenArticleModal,
+    isLoading,
+    endLoading,
 }: Props) => {
     let displayArticles;
         //   インスタ表示のときはレイアウトを変える
     if (articles && wpParams.categories === 187) {
-        displayArticles = articles.map((value, key: number) => (
-        <Grid item key={key} className={classes.item}>
-            <Paper
-                className={classes.article}
-                elevation={elevation}
-            >
-                <h3>{value.date}</h3>
-                <div dangerouslySetInnerHTML={{ __html: value.content }} />
-            </Paper>
-        </Grid>
-        ))
+        displayArticles = articles.map((value, key: number) => {
+            return (
+            <Grid item key={key} className={classes.item}>
+                <Paper
+                    className={classes.article}
+                    elevation={elevation}
+                >
+                    <h3>{value.date}</h3>
+                    <div dangerouslySetInnerHTML={{ __html: value.content }} />
+                </Paper>
+            </Grid>
+            )
+        })
         //   通常の記事一覧の表示
     } else if (articles) {
         displayArticles = articles.map((value, key: number) => {
@@ -97,35 +108,37 @@ const PMainPresenter = ({
                     img.push(value)
                 }
             })
+            
+            return (
+                <Grid item key={key} className={classes.item} >
+                <Paper
+                className={classes.article}
+                onClick={() => setAndOpenArticleModal([wpData.articles[key]])}
+                elevation={elevation}
+                id={`p_main_` + key}
+                >
+                <h2>{value.title} </h2>
+                <h3>{value.authorName}</h3>
+                <h3>{value.date}</h3>
+                <img className={classes.staffImg} src={(img) ? img[0] : ''} alt=''/>
 
-        return (
-            <Grid item key={key} className={classes.item} >
-            <Paper
-            className={classes.article}
-            onClick={() => setAndOpenArticleModal([wpData.articles[key]])}
-            elevation={elevation}
-            id={`p_main_` + key}
-            >
-            <h2>{value.title} </h2>
-            <h3>{value.authorName}</h3>
-            <h3>{value.date}</h3>
-            <img className={classes.staffImg} src={(img) ? img[0] : ''} alt=''/>
-
-            <div  dangerouslySetInnerHTML={{ __html: value.excerpt }} />
-            <img
-                className={classes.img}
-                src={value.featuredImg}
-                alt={value.title}
-            />
-            </Paper>
-        </Grid>
-        )});
+                <div  dangerouslySetInnerHTML={{ __html: value.excerpt }} />
+                <img
+                    className={classes.img}
+                    src={value.featuredImg}
+                    alt={value.title}
+                />
+                </Paper>
+            </Grid>
+            )
+        });
     } else {
         displayArticles = <Paper>No articles</Paper>;
     }
 
     return (
         <Grid id='p_main' container wrap="nowrap" className={classes.root}>
+        {/* {(!isLoading)? displayArticles: null} */}
         {displayArticles}
         </Grid>
         

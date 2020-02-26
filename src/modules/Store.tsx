@@ -41,6 +41,7 @@ const initAppState = {
     setModal: 'magazines',
     isModalOpen: false,
     isArticleModalOpen: false,
+    isLoading: false
 }
 export type AppState = typeof initAppState
 

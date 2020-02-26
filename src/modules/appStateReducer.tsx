@@ -5,7 +5,9 @@ export type AppStateAction =
     { type: "OPEN_MODAL", payload: string } |
     { type: "CLOSE_MODAL" } |
     { type: "OPEN_ARTICLE_MODAL" } |
-    { type: "CLOSE_ARTICLE_MODAL" }
+    { type: "CLOSE_ARTICLE_MODAL" } |
+    { type: "START_LOADING" } |
+    { type: "END_LOADING" }
 
 export function appStateReducer(state: AppState, action: AppStateAction) {
     let newState: AppState
@@ -27,7 +29,6 @@ switch (action.type) {
     case "OPEN_ARTICLE_MODAL":
         newState =  {
         ...state,
-        // setArticleModal: action.payload,
         isArticleModalOpen: true
     };
         break
@@ -35,6 +36,18 @@ switch (action.type) {
         newState =  {
         ...state,
         isArticleModalOpen: false
+    };
+        break
+    case "START_LOADING":
+        newState =  {
+        ...state,
+        isLoading: true
+    };
+        break
+    case "END_LOADING":
+        newState =  {
+        ...state,
+        isLoading: false
     };
     break
         default:

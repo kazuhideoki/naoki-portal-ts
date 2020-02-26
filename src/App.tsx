@@ -8,7 +8,10 @@ import { PFooter } from "./PFooter";
 import { PPagination } from "./PPagination";
 import { Store, WpParams, SetTotalPages } from "./modules/Store";
 import { PArticleModal } from "./PArticleModal";
-import { getWpPosts, getWpPostsImportantEn, getWpPostsImportantJa, getWpTags, getWpUsers } from "./modules/wpApiFetch";
+import { getWpPosts, getWpPosts2, getWpPostsImportantEn, getWpPostsImportantJa, getWpTags, getWpUsers } from "./modules/wpApiFetch";
+import { pageChange } from "./modules/pageChange";
+import { wpData } from "./test/testDataWpData";
+import { sortDataPosts } from "./modules/organizeData";
 
 
 // 3段のコンテナの整形に関してのみ記述, 
@@ -47,6 +50,9 @@ export type SetUsers = (data: any) => void
 type Props = {
     classes: Record<"root" | "header" | "main" | "footer", string>
     wpParams: WpParams
+    isLoading: boolean
+    startLoading: () => void
+    endLoading: () => void
     setArticles: SetArticles
     setArticlesImportantEn: SetArticlesImportantEn
     setArticlesImportantJa: SetArticlesImportantJa
@@ -57,7 +63,10 @@ type Props = {
 
 const AppContainer = ({presenter}: any)=> {
     const classes = useStyles();
-    const { wpParams, dispatchWpData, setTotalPages } = React.useContext(Store);
+    const { wpParams, dispatchWpData, appState, dispatchAppState, setTotalPages } = React.useContext(Store);
+    const isLoading = appState.isLoading
+    const startLoading = () => dispatchAppState({type: "START_LOADING"})
+    const endLoading = () => dispatchAppState({type: "END_LOADING"})
     const setArticles = (data: any) =>
         dispatchWpData({ type: "SET_ARTICLES", payload: data });
     const setArticlesImportantEn = (data: any) =>
@@ -72,6 +81,9 @@ const AppContainer = ({presenter}: any)=> {
     const props = {
     classes,
     wpParams,
+        isLoading,
+    startLoading,
+        endLoading,
     setArticles,
     setArticlesImportantEn,
     setArticlesImportantJa,
@@ -85,6 +97,9 @@ const AppContainer = ({presenter}: any)=> {
 const AppPresenter = ({
     classes,
     wpParams,
+    isLoading,
+    startLoading,
+    endLoading,
     setArticles,
     setArticlesImportantEn,
     setArticlesImportantJa,
@@ -94,7 +109,8 @@ const AppPresenter = ({
 }: Props) => {
 
     React.useEffect(() => {
-        getWpPosts({ wpParams, setArticles, setTotalPages });
+        startLoading()
+        getWpPosts2({ wpParams, setArticles, setTotalPages, endLoading });
     }, [wpParams]);
 
     React.useEffect (() => {
@@ -122,10 +138,10 @@ const AppPresenter = ({
             <PHeader />
         </Grid>
         <Grid item className={classes.main}>
-                <PMain />
-            <PPagination />
+            {(!isLoading) ? <PMain />: null}
         </Grid>
         <Grid item className={classes.footer}>
+            <PPagination />
             <PFooter />
         </Grid>
         <PArticleModal />
