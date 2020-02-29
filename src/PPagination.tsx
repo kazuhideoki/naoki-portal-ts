@@ -1,22 +1,22 @@
 import React from 'react'
-import { Store, WpParams} from "./modules/Store";
+import { Store } from "./modules/Store";
 import { WpParamsAction } from "./modules/wpParamsReducer";
 import {
     Home,
-  FirstPage,
-  NavigateBefore,
-  NavigateNext,
-  LastPage,
-  Label,
-  Person,
+    FirstPage,
+    NavigateBefore,
+    NavigateNext,
+    LastPage,
+    Label,
+    Person,
     Instagram
 } from "@material-ui/icons";
 
 type Props = {
-    wpParams: WpParams
+    currentPage: number
     openModal: (modalName: string) => void
+    setParams: (type: any) => void
     totalPages: number
-    dispatchWpParams: React.Dispatch<WpParamsAction>
 }
 
 const PPaginationContainer = ({ presenter }: any) => {
@@ -24,92 +24,121 @@ const PPaginationContainer = ({ presenter }: any) => {
       Store
     );
 
-    const openModal = (modalName: string) =>
-        dispatchAppState({ type: "OPEN_MODAL", payload: modalName });
+    const currentPage = wpParams.currentPage;
+    const openModal = (modalName: string) => {
+        dispatchAppState({ type: "OPEN_MODAL", payload: modalName })
+    }
 
+    // wpParamsReducerのWpParamsActionで上手く行かなった。検討の余地あり
+    const setParams = (arg: WpParamsAction) => {
+      dispatchAppState({ type: "START_LOADING" });
+      dispatchWpParams(arg);
+    };
+    
     const props = {
-        wpParams,
+        currentPage,
         openModal,
+        setParams,
         totalPages,
-        dispatchWpParams
     };
 
     return presenter(props)
 }
 
 const PPaginationPresenter = ({
-    wpParams,
+    currentPage,
     openModal,
+    setParams,
     totalPages,
-    dispatchWpParams,
-}: Props) => {
-  const page = wpParams.currentPage;
+}: Props) => { 
+    const HomeButton = () => {
+        const arg = { type: "MAINHOME" };
+        return <Home onClick={() => setParams(arg)} />;
+    };
+    const Tag = () => <Label onClick={ () => openModal("tag")} />;
+    const Author = () => <Person onClick={ () => openModal("author")} />;
+    const Insta = () => {
+        const arg = { type: "INSTA" };
+        return <Instagram onClick={() => setParams(arg)} />;
+    };
 
-    const home = <Home onClick={() => dispatchWpParams({ type: "MAINHOME" })} />;
-  const tag = <Label onClick={ () => openModal("tag")} />;
-
-  const author = <Person onClick={ () => openModal("author")} />;
-    const insta = <Instagram onClick={() => dispatchWpParams({ type: "INSTA" })}/>
-
-  const pageNumber = (
-    <>
-      【 {page}/{totalPages} 】
-    </>
-  );
-
-  let latest, prev, next, oldest
-
-  //  ページ数が3より大きい場合latestとoldestを表示
-  if (page > 3 && totalPages > 3) {
-      latest = <FirstPage onClick={() => dispatchWpParams({ type: "LATEST" })} />;
-  }
-  if (!(page === 1)) {
-      prev = <NavigateBefore onClick={() => dispatchWpParams({ type: "PREV" })} />;
-  }
-  if (!(page === totalPages)) {
-      next = <NavigateNext onClick={() => dispatchWpParams({ type: "NEXT" })} />;
-  }
-  if (page < totalPages - 2 && totalPages > 3) {
-      oldest = <LastPage onClick={() => dispatchWpParams({ type: "OLDEST", payload: totalPages })} />;
-  }
-
-  const number1 = page - 2;
-  const number2 = page - 1;
-  const number3 = page;
-  const number4 = page + 1;
-  const number5 = page + 2;
-
-  const numbers = [number1, number2, number3, number4, number5];
-
-  const displayNumbers = numbers.map(num => {
-    if (num <= 0) {
-      return "";
-    } else if (num > totalPages) {
-      return "";
-    } else if (num === page) {
-      return <button key={num}>{num}</button>;
+    const PageNumber = () => {
+        return <>【 {currentPage}/{totalPages} 】</>
     }
-    return (
-        <button key={num} onClick={() => dispatchWpParams({ type: "NUM", payload: num })}>
-        {num}
-      </button>
-    );
-  });
 
-  return (
-    <div>
-      {home}
-      {tag}
-      {author}
-      {insta}
-      {pageNumber}
-      {latest}
-      {prev}
-      {displayNumbers}
-      {next}
-      {oldest}
-    </div>
-  );
+    let Latest = () => <></>;
+    let Prev = () => <></>;
+    let Next = () => <></>;
+    let Oldest = () => <></>
+    //  ページ数が3より大きい場合latestとoldestを表示
+    if (currentPage > 3 && totalPages > 3) {
+        Latest = () => {
+            const arg = { type: "LATEST" };
+            return <FirstPage onClick={() => setParams(arg)} />;
+        };
+    }
+    if (!(currentPage === 1)) {
+        Prev = () => {
+            const arg = { type: "PREV" };
+            return <NavigateBefore onClick={() => setParams(arg)} />;
+        }
+    }
+    if (!(currentPage === totalPages)) {
+        Next = () => {
+            const arg = { type: "NEXT"};
+            return <NavigateNext onClick={() => setParams(arg)} />;
+        }
+    }
+    if (currentPage < totalPages - 2 && totalPages > 3) {
+        Oldest = () => {
+            const arg = { type: "OLDEST", payload: totalPages };
+            return <LastPage onClick={() => setParams(arg)} />;
+        }
+    }
+
+    const number1 = currentPage - 2;
+    const number2 = currentPage - 1;
+    const number3 = currentPage;
+    const number4 = currentPage + 1;
+    const number5 = currentPage + 2;
+
+    const numbers = [number1, number2, number3, number4, number5];
+
+    const DisplayNumbers = () => {
+        const nums = numbers.map(num => {
+            if (num <= 0) {
+            return "";
+            } else if (num > totalPages) {
+            return "";
+            } else if (num === currentPage) {
+            return <button key={num}>{num}</button>;
+            }
+
+            const arg = { type: "NUM", payload: num };
+            return (
+                <button key={num} onClick={() => setParams(arg)}> 
+                    {num}
+                </button>
+            );
+        })
+
+        return <>{nums}</>
+    }
+
+    return (
+        <>
+            <HomeButton/>
+            <Tag/>
+            <Author/>
+            <Insta/>
+            <PageNumber/>
+            <Latest/>
+            <Prev/>
+            <DisplayNumbers/>
+            <Next/>
+            <Oldest/>
+        </>
+    );
 };
 
 export const PPagination = () => (

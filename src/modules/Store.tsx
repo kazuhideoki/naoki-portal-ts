@@ -3,8 +3,6 @@ import { WpParamsAction, wpParamsReducer } from "./wpParamsReducer";
 import { WpDataAction, wpDataReducer } from "./wpDataReducer";
 import { AppStateAction, appStateReducer } from "./appStateReducer";
 
-
-
 const initParams: WpParams = {
     currentPage: 1,
     categories: 24,
@@ -21,12 +19,12 @@ export type WpParams = {
 }
 
 const initWpData: WpData = {
-  articles: [],
-  articlesImportantEn: [],
-  articlesImportantJa: [],
-  articleModal: [],
-  tags: [],
-  users: []
+    articles: [],
+    articlesImportantEn: [],
+    articlesImportantJa: [],
+    articleModal: [],
+    tags: [],
+    users: []
 };
 export type WpData = {
     articles: any[],
@@ -41,7 +39,7 @@ const initAppState = {
     setModal: 'magazines',
     isModalOpen: false,
     isArticleModalOpen: false,
-    isLoading: false
+    isLoading: false,
 }
 export type AppState = typeof initAppState
 
@@ -65,27 +63,24 @@ const Store = React.createContext({} as ContextProps);
 const StoreContextProvider = ({children}: any) => {
     const [wpParams, dispatchWpParams] = useReducer(wpParamsReducer, initParams);
     const [wpData, dispatchWpData] = useReducer(wpDataReducer, initWpData);
-    const [appState, dispatchAppState] = useReducer(
-      appStateReducer,
-      initAppState
-    );
+    const [appState, dispatchAppState] = useReducer(appStateReducer, initAppState);
     // トータルページ数を取得、paginationに利用
     const [totalPages, setTotalPages] = useState(1)
 
     const values = {
-      wpParams,
-      dispatchWpParams,
-      wpData,
-      dispatchWpData,
-      appState,
-      dispatchAppState,
-      totalPages,
-      setTotalPages,
+        wpParams,
+        dispatchWpParams,
+        wpData,
+        dispatchWpData,
+        appState,
+        dispatchAppState,
+        totalPages,
+        setTotalPages,
     };
 
     return (
       <Store.Provider value={ values }>
-        {children}
+            {children}
       </Store.Provider>
     );
 

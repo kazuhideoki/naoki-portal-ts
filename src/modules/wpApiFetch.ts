@@ -1,20 +1,20 @@
 import { WpParams, SetTotalPages } from "./Store";
-import { SetArticles, SetArticlesImportantEn, SetArticlesImportantJa, SetTags, SetUsers } from "../App";
+import {SetArticlesImportantEn, SetArticlesImportantJa, SetTags, SetUsers } from "../App";
 import { SetSingleArticle } from "../PArticleModal";
 
 export function makeApiParamsPosts(state: WpParams, perPage: number) {
-  const per_page = perPage;
-  let page;
-  let categories;
-  let author;
-  let tag;
+    const per_page = perPage;
+    let page;
+    let categories;
+    let author;
+    let tag;
 
-  page = state.currentPage || 1;
-  categories = state.categories
-  author = state.author || "";
-  tag = state.tag || "";
+    page = state.currentPage || 1;
+    categories = state.categories
+    author = state.author || "";
+    tag = state.tag || "";
 
-  const params =
+    const params =
     "?per_page=" +
     per_page +
     "&categories=" +
@@ -27,10 +27,7 @@ export function makeApiParamsPosts(state: WpParams, perPage: number) {
     "&tags=" +
     tag;
 
-    console.log(params);
-    
-
-  return "posts" + params;
+    return "posts" + params;
 }
 export function makeApiParamsPostsImportantEn(perPage: number) {
     const params = "?per_page=" + perPage + "&categories=" + 59
@@ -50,7 +47,7 @@ export function makeApiParamsTags(perPage: number) {
 }
 export function makeApiParamsUsers(perPage: number) {
     const params = "?per_page=" + perPage;
-  return "users" + params;
+    return "users" + params;
 }
 
 export function fetchData(params: string) {
@@ -59,65 +56,12 @@ export function fetchData(params: string) {
     return response
 }
 
-type GetTotalPages = (response: any, setTotalPages: SetTotalPages) => void
-export function getTotalPages(response: any, setTotalPages: SetTotalPages) {
-  const totalPages = Number(response.headers.get("x-wp-totalpages"));
-  setTotalPages(totalPages);
-}
-type WpApiToData = {
-    response: any,
-    setArticles?: SetArticles | undefined,
-    setArticlesImportantEn?: SetArticlesImportantEn,
-    setArticlesImportantJa?: SetArticlesImportantJa,
-    setSingleArticle?: SetSingleArticle,
-    setTags?: SetTags,
-    setUsers?: SetUsers,
-    getTotalPages?: GetTotalPages,
-    setTotalPages?: SetTotalPages,
-}
-export function wpApiToData({
-    response,
-    setArticles,
-    setArticlesImportantEn,   
-    setArticlesImportantJa,   
-    setSingleArticle,
-    setTags,
-    setUsers,
-    getTotalPages,
-    setTotalPages
-}: WpApiToData) {
-    response.then((response: any) => {
-        if (getTotalPages && setTotalPages) {
-        getTotalPages(response, setTotalPages);
-    }
-    response
-        .json()
-        .then((data: any) => {
-        const setData =
-            setArticles || setArticlesImportantEn || setArticlesImportantJa || setSingleArticle || setTags || setUsers
-            if (setData) {
-                setData(data);
-            }
-        
-        })
-        .catch((error: any) => {
-        console.log("catch errorだよ " + error);
-        });
-    });
-}
-
-type ResponseToData = {
-    response: any,
-    getTotalPages?: GetTotalPages,
-    setTotalPages?: SetTotalPages,
-}
-
 export function responseToData(response: any) {
     try {
         const data = response.json()
         return data
     } catch (error) {
-        console.log("catch errorだよ,responseToData " + error);
+        console.log("catch errorだよ, responseToData " + error);
     }
 }
 export function responseToTotalPages(response: any) {
@@ -134,20 +78,10 @@ type GetWpPosts = {
     wpParams: WpParams
     setArticles: (data: object[]) => void
     setTotalPages: SetTotalPages
-    endLoading: () => void
+    endLoading?: () => void
 }
 // メインのpostの記事取得
-export function getWpPosts({ wpParams, setArticles, setTotalPages }: GetWpPosts ) {
-         const params = makeApiParamsPosts(wpParams, 6);
-         const response = fetchData(params);
-         return wpApiToData({
-           response,
-           setArticles,
-           getTotalPages,
-           setTotalPages
-         });
-       }
-export async function getWpPosts2({ wpParams, setArticles, setTotalPages, endLoading }: GetWpPosts ) {
+export async function getWpPosts({ wpParams, setArticles, setTotalPages, endLoading }: GetWpPosts ) {
     const params = makeApiParamsPosts(wpParams, 6);
     const response = await fetchData(params);
     const data = await responseToData(response)
@@ -158,55 +92,68 @@ export async function getWpPosts2({ wpParams, setArticles, setTotalPages, endLoa
     if (totalPages) {
         setTotalPages(totalPages)
     }
-    endLoading()
-
+    if(endLoading){
+        endLoading()
+    }
 }
 
-export function getWpPostsImportantEn(setArticlesImportantEn: SetArticlesImportantEn) {
-    const params = makeApiParamsPostsImportantEn(1);
-    const response = fetchData(params);
-    wpApiToData({
-        response,
-        setArticlesImportantEn,
-    });
+type GetWpPostsImportant = {
+    setArticlesImportantEn: SetArticlesImportantEn
+    setArticlesImportantJa: SetArticlesImportantJa
 }
-export function getWpPostsImportantJa(setArticlesImportantJa: SetArticlesImportantJa) {
-    const params = makeApiParamsPostsImportantJa(1);
-    const response = fetchData(params);
-    wpApiToData({
-        response,
-        setArticlesImportantJa,
-    });
+// Importantの記事を日英ともに取得
+export async function getWpPostsImportant({ setArticlesImportantEn, setArticlesImportantJa }: GetWpPostsImportant) {
+    const paramsEn = makeApiParamsPostsImportantEn(1);
+    const responseEn = await fetchData(paramsEn);
+    const dataEn = await responseToData(responseEn)
+    if (dataEn) {
+        setArticlesImportantEn(dataEn)
+    }
+    const paramsJa = makeApiParamsPostsImportantJa(1);
+    const responseJa = await fetchData(paramsJa);
+    const dataJa = await responseToData(responseJa)
+    if (dataJa) {
+        setArticlesImportantJa(dataJa)
+    }
 }
-
+ 
 type GetWpSinglePosts = ({
     slug: string;
     setSingleArticle: SetSingleArticle;
+    articleModalData: any[]
 })
 // PArticleModalで記事内にあるリンクを取得。記事データもsetSingleArticleで格納
-export function getWpSinglePosts({ slug, setSingleArticle }: GetWpSinglePosts) {
-         const params = makeApiParamsSinglePosts(slug);
-         const response = fetchData(params);
-         return wpApiToData({
-           response,
-           setSingleArticle
-         });
-       }
+export async function getWpSinglePosts({ slug, setSingleArticle, articleModalData }: GetWpSinglePosts) {
+        const params = makeApiParamsSinglePosts(slug);
+        const response = await fetchData(params);
+        const data = await responseToData(response)
+        console.log(data);
+        if (data.length) {
+            setSingleArticle(data)
+        }else{
+            // 固定ページや外部のリンクで有効なページがfetchできなかった場合でもPArticleModalのuseEffectを作動させるために値渡しでcloneを作ってsetSingleArticleし直す
+            const clone = Array.from(articleModalData)
+            setSingleArticle(clone)
+            alert('Portalで表示できないリンク先です。')
+        }
+   
+}
+
 // tag取得日英に分けてsetTagsに格納
-export function getWpTags(setTags: SetTags) {
-         const params = makeApiParamsTags(50);
-         const response = fetchData(params);
-         return wpApiToData({
-           response,
-           setTags
-         });
-       }
+export async function getWpTags(setTags: SetTags) {
+    const params = makeApiParamsTags(50);
+    const response = await fetchData(params);
+    const data = await responseToData(response);
+    if (data) {
+        setTags(data)
+    }
+}
 // userを取得
-export function getWpUsers(setUsers: SetUsers) {
-         const params = makeApiParamsUsers(50);
-         const response = fetchData(params);
-         return wpApiToData({
-           response,
-           setUsers
-         });
-       }
+export async function getWpUsers(setUsers: SetUsers) {
+    const params = makeApiParamsUsers(50);
+    const response = await fetchData(params);
+    const data = await responseToData(response);
+    if (data) {
+        setUsers(data)
+    }
+}

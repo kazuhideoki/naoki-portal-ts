@@ -2,12 +2,13 @@ import React, {useContext}from 'react'
 import { Grid, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import {
-  Translate,
-  ImportContactsTwoTone,
-  SignalWifi3BarTwoTone,
-  ThumbUpTwoTone,
-  PersonAddTwoTone,
-  ListAltTwoTone
+    Translate,
+    ImportContactsTwoTone,
+    SignalWifi3BarTwoTone,
+    ThumbUpTwoTone,
+    PersonAddTwoTone,
+    ListAltTwoTone,
+    SettingsApplicationsTwoTone,
 } from "@material-ui/icons";
 import { ThemeContext } from "./modules/ThemeContext";
 import { Store } from "./modules/Store";
@@ -30,6 +31,7 @@ const PFooterContainer = ({presenter}: any) => {
     const { wpParams, dispatchWpParams, dispatchAppState } = useContext(Store);
 
     const changeLang = () => {
+        dispatchAppState({ type: "START_LOADING" })
         dispatchWpParams({ type: "LANG" });
     }
     const openModal = (modalName: string) =>
@@ -47,7 +49,7 @@ const PFooterContainer = ({presenter}: any) => {
         classes,
         theme,
         changeLang,
-        openModal
+        openModal,
     };
 
     return presenter(props)
@@ -72,51 +74,58 @@ const useStyle = makeStyles({
 
 const PFooterPresenter = ({ w, classes, theme, changeLang, openModal }: Props) => {
    
-return (
-    <Paper elevation={theme.elevation} className={classes.root}>
-        <Grid container justify="center">
-            <Grid item className={classes.iconText}>
-                <Translate
-                onClick={() => changeLang()}
-                color="primary"
-                style={theme.icon}
-                />
-                {w.lang}
+    return (
+        <Paper elevation={theme.elevation} className={classes.root}>
+            <Grid container justify="center">
+                <Grid item className={classes.iconText}>
+                    <Translate
+                    onClick={() => changeLang()}
+                    color="primary"
+                    style={theme.icon}
+                    />
+                    {w.lang}
+                </Grid>
+                <Grid item className={classes.iconText}>
+                    <ImportContactsTwoTone
+                    onClick={ () => openModal("magazines")}
+                    fontSize="large"
+                    style={theme.icon}
+                    />
+                    {w.magazines}
+                </Grid>
+                <Grid item className={classes.iconText}>
+                    <SignalWifi3BarTwoTone
+                    onClick={ () => openModal("wifi")}
+                    style={theme.icon}
+                    />
+                    Wifi
+                </Grid>
+                <Grid item className={classes.iconText}>
+                    <ThumbUpTwoTone
+                    onClick={ () => openModal("review")}
+                    style={theme.icon}
+                    />
+                </Grid>
+                <Grid item className={classes.iconText}>
+                    <ListAltTwoTone
+                    onClick={ () => openModal("menus")}
+                    style={theme.icon}
+                    />
+                </Grid>
+                <Grid item className={classes.iconText}>
+                    <a href="https://karte.smart-recept.jp/staff/login/">
+                    <PersonAddTwoTone style={theme.icon} />
+                    </a>
+                </Grid>
+                {/* 設定が必要になったら追加する */}
+                {/* <Grid item className={classes.iconText}>
+                    <SettingsApplicationsTwoTone
+                        onClick={() => openModal("setting")}
+                        style={theme.icon}
+                    />
+                </Grid> */}
             </Grid>
-            <Grid item className={classes.iconText}>
-                <ImportContactsTwoTone
-                onClick={ () => openModal("magazines")}
-                fontSize="large"
-                style={theme.icon}
-                />
-                {w.magazines}
-            </Grid>
-            <Grid item className={classes.iconText}>
-                <SignalWifi3BarTwoTone
-                onClick={ () => openModal("wifi")}
-                style={theme.icon}
-                />
-                Wifi
-            </Grid>
-            <Grid item className={classes.iconText}>
-                <ThumbUpTwoTone
-                onClick={ () => openModal("review")}
-                style={theme.icon}
-                />
-            </Grid>
-            <Grid item className={classes.iconText}>
-                <ListAltTwoTone
-                onClick={ () => openModal("menus")}
-                style={theme.icon}
-                />
-            </Grid>
-            <Grid item className={classes.iconText}>
-                <a href="https://karte.smart-recept.jp/staff/login/">
-                <PersonAddTwoTone style={theme.icon} />
-                </a>
-            </Grid>
-        </Grid>
-    </Paper>
+        </Paper>
     );
 };
 export const PFooter = () => (

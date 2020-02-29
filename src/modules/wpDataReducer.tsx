@@ -14,26 +14,26 @@ export function wpDataReducer(state: WpData, action: WpDataAction) {
     const func = wpDataReducer
         switch (action.type) {
         case "SET_ARTICLES":
-                newState = { ...state, articles: action.payload }
-                break 
+            newState = { ...state, articles: action.payload }
+            break 
         case "SET_ARTICLES_IMPORTANT_EN":
-                newState = { ...state, articlesImportantEn: action.payload }
-                break
+            newState = { ...state, articlesImportantEn: action.payload }
+            break
         case "SET_ARTICLES_IMPORTANT_JA":
-                newState = { ...state, articlesImportantJa: action.payload }
-                break
+            newState = { ...state, articlesImportantJa: action.payload }
+            break
         case "SET_SINGLE_ARTICLE":
-                newState = { ...state, articleModal: action.payload };
-                break
+            newState = { ...state, articleModal: action.payload };
+            break
         case "SET_TAGS":
-                newState = { ...state, tags: action.payload };
-                break
+            newState = { ...state, tags: action.payload };
+            break
         case "SET_USERS":
-                newState = { ...state, users: action.payload };
-                break
+            newState = { ...state, users: action.payload };
+            break
         default:
             console.log("エラーだよ,wpDataReducer");
-                newState = { ...state }
+            newState = { ...state }
         }
     reducerLogger({ state, newState, func, action})
     return newState

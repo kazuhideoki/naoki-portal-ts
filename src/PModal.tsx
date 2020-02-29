@@ -5,7 +5,7 @@ import { sortDataTags, SortDataTags, sortDataUsers, SortDataUsers } from "./modu
 import { Tag, Author } from "./modules/wpParamsReducer";
 import { AppState } from "./modules/Store";
 
-import { Button, Paper, Dialog, Slide, withStyles } from "@material-ui/core";
+import { Button, Paper, Dialog, Slide, withStyles, makeStyles } from "@material-ui/core";
 import {
     ImportContacts,
     FreeBreakfastTwoTone,
@@ -19,12 +19,12 @@ import menu from "./img/menu-img.jpg";
 import menuTreatment from "./img/menu-treatment-img.jpg";
 import googleQr from "./img/review_qr_google.png";
 import facebookQr from "./img/review_qr_facebook.png";
+import { pickStaffImg } from "./modules/pickStaffImg";
+import { staffImg } from "./img/staff/staffImg";
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
-
 
 const StyledDialog = withStyles({
     paper: {
@@ -43,15 +43,13 @@ type Props = {
     isModalOpen: AppState["isModalOpen"]
     openModal: (name: string) => void,
     closeModal: () => void,
-    changeParamsAndClose: ({ type, payload }: ChangeParamsAndClose) => void
+    setParamsAndClose: ({ type, payload }: SetParamsAndClose) => void
 }
-type ChangeParamsAndClose = Tag | Author
+type SetParamsAndClose = Tag | Author
 
 const PModalContainer = ({presenter}: any) => {
     const theme = useContext(ThemeContext);
-      const { wpParams, wpData, dispatchWpParams, appState, dispatchAppState } = React.useContext(
-        Store
-      );
+    const { wpParams, wpData, dispatchWpParams, appState, dispatchAppState } = React.useContext(Store)
     const tags = sortDataTags(wpData.tags);
     const authors = sortDataUsers(wpData.users);
     const setModal = appState.setModal;
@@ -62,144 +60,160 @@ const PModalContainer = ({presenter}: any) => {
     const closeModal = () => {
       dispatchAppState({ type: "CLOSE_MODAL" });
     };
-    const changeParamsAndClose = ({ type, payload }: ChangeParamsAndClose) => {
+    const setParamsAndClose = ({ type, payload }: SetParamsAndClose) => {
+        dispatchAppState({ type: "START_LOADING" })
         dispatchWpParams({ type: type, payload: payload })
         dispatchAppState({ type: "CLOSE_MODAL" });
     }
 
     const props = {
-      wpParams,
-      tags,
-      authors,
-      theme,
-      setModal,
-      isModalOpen,
-      openModal,
-      closeModal,
-      changeParamsAndClose
+        wpParams,
+        tags,
+        authors,
+        theme,
+        setModal,
+        isModalOpen,
+        openModal,
+        closeModal,
+        setParamsAndClose
     };
+
     return presenter(props)
+
 }
+
+const useStyle = makeStyles({
+    staffImg: {
+        width: 50
+    }
+});
+
 const PModalPresenter = ({
-  wpParams,
-  tags,
-  authors,
-  theme,
-  setModal,
-  isModalOpen,
-  openModal,
-  closeModal,
-  changeParamsAndClose,
+    wpParams,
+    tags,
+    authors,
+    theme,
+    setModal,
+    isModalOpen,
+    openModal,
+    closeModal,
+    setParamsAndClose,
 }: Props) => {
-  let modal;
-  switch (setModal) {
-    case "magazines":
-      modal = (
-        <Paper>
-          Magzter
-          <a href="fb179689808731959://" >
-            <ImportContacts style={theme.icon} />
-          </a>
-          楽天マガジン
-          <a href="rmagazine://" >
-            <ImportContacts style={theme.icon} />
-          </a>
-        </Paper>
-      );
-      break;
+    const classes = useStyle()
+    let modal;
+    switch (setModal) {
+        case "magazines":
+            modal = (
+                <>
+                Magzter
+                <a href="fb179689808731959://" >
+                    <ImportContacts style={theme.icon} />
+                </a>
+                楽天マガジン
+                <a href="rmagazine://" >
+                    <ImportContacts style={theme.icon} />
+                </a>
+                </>
+            );
+        break;
 
-    case "wifi":
-      modal = <Paper>NAOKI Hair Dressing 02350235</Paper>;
-      break;
+        case "wifi":
+            modal = (<p>NAOKI Hair Dressing 02350235</p>)
+        break;
 
-    case "review":
-      modal = (
-        <Paper>
-          レビューしてね。 google →<img src={googleQr} alt="" />
-          facebook→
-          <img src={facebookQr} alt="" />
-        </Paper>
-      );
-      break;
-    case "menus":
-      modal = (
-        <Paper>
-          ドリンク、全体メニュー、トリートメント麺ニューを
-          <FreeBreakfastTwoTone
-            style={theme.icon}
-            onClick={ () => openModal("menuDrink")}
-          />
-          <ListTwoTone style={theme.icon} onClick={ () => openModal("menu")} />
-          <img
-            src={treatmentIcon}
-            alt=""
-            onClick={ () => openModal("menuTreatment")}
-          />
-        </Paper>
-      );
-      break;
-    case "menuDrink":
-      modal = <img src={menuDrink} alt="" />;
-      break;
-    case "menu":
-      modal = <img src={menu} alt="" />;
-      break;
-    case "menuTreatment":
-      modal = <img src={menuTreatment} alt="" />;
-      break;
-    case "tag":
-      let tagsLang;
-      if (wpParams.isJa) {
-        tagsLang = tags.tagsJa;
-      } else {
-        tagsLang = tags.tagsEn;
-      }
-      const tagsWrap = tagsLang.map((value, key) => {
-          const payload = value.id
-          const type = "TAG"
-          return <Button key={key} onClick={() => changeParamsAndClose({ type, payload})}>
-          {value.name}
-        </Button>
-      });
-      modal = <Paper>{tagsWrap}</Paper>;
+        case "review":
+            modal = (
+                <>
+                レビューしてね。 google →<img src={googleQr} alt="" />
+                facebook→
+                <img src={facebookQr} alt="" />
+                </>
+            );
+        break;
+        case "menus":
+            modal = (
+                <>
+                <FreeBreakfastTwoTone
+                    style={theme.icon}
+                    onClick={ () => openModal("menuDrink")}
+                />
+                <ListTwoTone style={theme.icon} onClick={ () => openModal("menu")} />
+                <img
+                    src={treatmentIcon}
+                    alt=""
+                    onClick={ () => openModal("menuTreatment")}
+                />
+                </>          
+            );
+        break;
+        case "menuDrink":
+            modal = <img src={menuDrink} alt="" />;
+        break;
+        case "menu":
+            modal = <img src={menu} alt="" />;
+        break;
+        case "menuTreatment":
+            modal = <img src={menuTreatment} alt="" />;
+        break;
+        case "setting":
+            modal = <p>settingです</p>;
+        break;
+        case "tag":
+            let tagsLang;
+            if (wpParams.isJa) {
+                tagsLang = tags.tagsJa;
+            } else {
+                tagsLang = tags.tagsEn;
+            }
+            const tagsWrap = tagsLang.map((value, key) => {
+                const payload = value.id
+                const type = "TAG"
+                return (
+                    <Button key={key} onClick={() => setParamsAndClose({ type, payload})}>
+                        {value.name}
+                    </Button>
+                )
+            });
+            modal = <>{tagsWrap}</>;
+        break;
 
-      break;
-    case "author":
-      var auhtorsWrap = authors
-          .filter(function (value) {
-          if (value.name === "Naoki Hair Dressing") {
-            return false; // skip
-          }
-          return true;
-        })
-        .map((value, key) => {
-            const payload = value.id
-            const type = "AUTHOR"
-            return <Button key={key} onClick={() => changeParamsAndClose({type, payload})}>
-                <img src={value.img} alt=""/>{value.name}
-          </Button>
-        });
-      modal = <Paper>{auhtorsWrap}</Paper>;
+        case "author":
 
-      break;
+            let auhtorsWrap = authors.filter(function (value) {
+                if (value.name === "Naoki Hair Dressing") {
+                    return false; // skip
+                }
+                return true;
+            }).map((value, key) => {
+                const payload = value.id
+                const img = pickStaffImg(staffImg, payload)
+                const type = "AUTHOR"
+                return (
+                    <Button key={key} onClick={() => setParamsAndClose({type, payload})}>
+                        <img src={img} alt="" className={classes.staffImg}/>{value.name}
+                    </Button>
+                )
+            });
+            modal = <>{auhtorsWrap}</>
+        break;
 
-    default:
-      console.log("エラーだよ、PModal");
-  }
+        default:
+        console.log("エラーだよ、PModal");
+    }
 
-  return (
-    <StyledDialog
-      open={isModalOpen}
-      TransitionComponent={Transition}
-      onClose={closeModal}
-    >
-      {modal}
-    </StyledDialog>
-  );
+    return (
+        <StyledDialog
+        open={isModalOpen}
+        TransitionComponent={Transition}
+        onClose={closeModal}
+        >
+            <Paper>
+                {modal}
+            </Paper>
+        </StyledDialog>
+    );
 };
 
 export const PModal = () => (
-  <PModalContainer
-        presenter={(props: Props) => <PModalPresenter {...props} />}
-  />
+    <PModalContainer presenter={(props: Props) => <PModalPresenter {...props} />} />
 );

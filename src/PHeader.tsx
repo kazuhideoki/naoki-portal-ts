@@ -1,5 +1,5 @@
 import React from "react";
-import { Store, WpData } from './modules/Store'
+import { Store } from './modules/Store'
 import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { formatDate } from "./modules/organizeData";
@@ -11,16 +11,17 @@ const useStyles = makeStyles({
         padding: 10
     },
     img: {
-        width: 50
+        heigth: "100%"
     }
 });
 type Props = {
-    wpData: WpData
+    classes: Record<"root" | "img", string>
     SortedNotice: any[]
     setAndOpenArticleModal: () => void
 }
 
 const PHeaderContainer = ({presenter}: any) => {
+    const classes = useStyles();
 
     const { wpData, wpParams, dispatchWpData, dispatchAppState } = React.useContext(Store);
     let notice = (wpParams.isJa) ? wpData.articlesImportantJa : wpData.articlesImportantEn
@@ -33,15 +34,14 @@ const PHeaderContainer = ({presenter}: any) => {
     }
 
     const props = {
-        wpData,
+        classes,
         SortedNotice,
         setAndOpenArticleModal
     }
     return presenter(props)
 }
 
-const PHeaderPresenter = ({ SortedNotice, setAndOpenArticleModal }: Props) => {
-    const classes = useStyles();
+const PHeaderPresenter = ({ classes, SortedNotice, setAndOpenArticleModal }: Props) => {
     let displayNotice
     if (SortedNotice) {
         displayNotice = SortedNotice.map((value, key) => (
@@ -58,7 +58,7 @@ const PHeaderPresenter = ({ SortedNotice, setAndOpenArticleModal }: Props) => {
          ))   
     }
 
-    return <div>{displayNotice}</div>
+    return displayNotice
 
 }
 

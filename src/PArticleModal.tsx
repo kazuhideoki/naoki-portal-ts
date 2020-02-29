@@ -1,38 +1,37 @@
 import React from 'react'
-import { Store } from './modules/Store';
+import { Store, WpData } from './modules/Store';
 import { getWpSinglePosts } from "./modules/wpApiFetch";
 import { sortDataPosts } from "./modules/organizeData";
-import { modifyAtags } from "./modules/modifyAtags";
+import { bindOnclick } from "./modules/bindOnclick";
 import { TransitionProps } from '@material-ui/core/transitions';
 import {
-  Paper,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  Slide,
-  withStyles
+    Paper,
+    Dialog,
+    DialogContent,
+    DialogContentText,
+    Slide,
+    withStyles
 } from "@material-ui/core";
-import { HighlightOff, ImportExport } from "@material-ui/icons";
+import { HighlightOff } from "@material-ui/icons";
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const StyledDialog = withStyles({
-  paper: {
-    maxWidth: '100%',
-    width: '90vw',
-    height: '90vh',
-    // padding: 30
-  }
+    paper: {
+        maxWidth: '100%',
+        width: '90vw',
+        height: '90vh',
+    }
 })(Dialog);
 const StyledHighlightOff = withStyles({
-  root: {
-    fontSize: '100px',
-    position: 'fixed',
-    right: '50px',
-    opacity: '0.7'
-  }
+    root: {
+        fontSize: '100px',
+        position: 'fixed',
+        right: '50px',
+        opacity: '0.7'
+    }
 })(HighlightOff);
 
 
@@ -40,6 +39,7 @@ export type SetSingleArticle = (data: any) => void
 export type GetAndShowLinkPage = (data: any) => void
 
 type Props = {
+    wpData: WpData
     articleModal: [{
         title: string;
         excerpt: string;
@@ -50,90 +50,101 @@ type Props = {
     isArticleModalOpen: boolean
     closeArticleModal: () => void
     getAndShowLinkPage: GetAndShowLinkPage
+    isLoadingArticleModal:boolean
 
 };
 
 const PArticleModalContainer = ({presenter}:any) => {
     const {
-      wpData,
-      dispatchWpData,
-      appState,
-      dispatchAppState
+        wpData,
+        dispatchWpData,
+        appState,
+        dispatchAppState
     } = React.useContext(Store);
-
     const articleModal = sortDataPosts(wpData.articleModal) || [
-      {
+    {
         title: "",
         excerpt: "",
         content: "",
         link: "",
         featuredImg: ""
-      }
+    }
     ];
     const isArticleModalOpen = appState.isArticleModalOpen
     const closeArticleModal = () => dispatchAppState({ type: "CLOSE_ARTICLE_MODAL" });
     
     const setSingleArticle = (data: any) =>
-      dispatchWpData({ type: "SET_SINGLE_ARTICLE", payload: data });
-    const getAndShowLinkPage = (slug: string) =>{
-      getWpSinglePosts({ slug, setSingleArticle });
+    dispatchWpData({ type: "SET_SINGLE_ARTICLE", payload: data });
+
+    const [isLoadingArticleModal, setIsLoadingArticleModal] = React.useState(false)
+    const articleModalData = wpData.articleModal
+    const getAndShowLinkPage = async (slug: string) =>{
+        setIsLoadingArticleModal(true)
+        await getWpSinglePosts({ slug, setSingleArticle, articleModalData});
+        setIsLoadingArticleModal(false)
     }
 
-        
-
     const props = {
-      articleModal,
-      isArticleModalOpen,
-      closeArticleModal,
-      getAndShowLinkPage
+        wpData,
+        articleModal,
+        isArticleModalOpen,
+        closeArticleModal,
+        getAndShowLinkPage,
+        isLoadingArticleModal,
     };
-     
+    
     return presenter(props);
 }
 const PArticleModalPresenter = ({
+    wpData,
     articleModal,
-  isArticleModalOpen,
-  closeArticleModal,
-  getAndShowLinkPage,
+    isArticleModalOpen,
+    closeArticleModal,
+    getAndShowLinkPage,
+    isLoadingArticleModal
 }: Props) => {
-  let singleArticle;
-  let content;
-  if (articleModal.length) {
-//   if (articleModal) {
-    const article = articleModal[0];
-    singleArticle = "<h1>" + article.title + "</h1>" + article.content;
+    const ArticleRef = React.useRef(null)
+    let singleArticle;
+    let content;
 
-    content = (
-      <Paper>
-        <div
-          className="content"
-          dangerouslySetInnerHTML={{ __html: singleArticle }}
-        />
-      </Paper>
+    if (articleModal.length) {
+        const article = articleModal[0];
+        singleArticle = "<h1>" + article.title + "</h1>" + article.content;
+ 
+        content = (
+        <Paper>
+            <div
+            ref={ArticleRef}
+            id="p_article_modal"
+            className="content"
+            dangerouslySetInnerHTML={{ __html: singleArticle }}
+            />
+        </Paper>
+        );
+    }
+
+    //   記事ページのリンク先を取得、onClickでリンク先ページに遷移できるようにバインド
+    React.useLayoutEffect(() => {
+        bindOnclick(getAndShowLinkPage, ArticleRef);
+    }, [wpData.articleModal]);
+    
+    return (
+        <StyledDialog
+        open={isArticleModalOpen}
+        TransitionComponent={Transition}
+        onClose={closeArticleModal}
+        >
+        <StyledHighlightOff onClick={closeArticleModal} />
+            <DialogContent>
+                <DialogContentText>{(!isLoadingArticleModal) ? content : null}</DialogContentText>
+                {/* <DialogContentText>{ isLoadingArticleModal || content || null}</DialogContentText> */}
+            </DialogContent>
+        </StyledDialog>
     );
-  }
-
-  //   記事ページのリンク先を取得、onClickでリンク先ページに遷移できるようにバインド
-  React.useEffect(() => {
-    modifyAtags(getAndShowLinkPage);
-  });
-
-  return (
-    <StyledDialog
-      open={isArticleModalOpen}
-      TransitionComponent={Transition}
-      onClose={closeArticleModal}
-    >
-      <StyledHighlightOff onClick={closeArticleModal} />
-      <DialogContent>
-        <DialogContentText>{content}</DialogContentText>
-      </DialogContent>
-    </StyledDialog>
-  );
 };
 
 export const PArticleModal = () => (
-  <PArticleModalContainer
+    <PArticleModalContainer
         presenter={(props: Props) => <PArticleModalPresenter {...props} />}
-  />
+    />
 );

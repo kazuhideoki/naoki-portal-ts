@@ -1,47 +1,49 @@
-import React, { Suspense } from "react";
-import { Grid, } from "@material-ui/core";
+import React from "react";
+import { Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import {PModal} from "./PModal";
-import {PHeader} from "./PHeader"; 
+import Skeleton from "@material-ui/lab/Skeleton";
+import { PModal } from "./PModal";
+import { PHeader } from "./PHeader"; 
 import { PMain } from "./PMain";
 import { PFooter } from "./PFooter";
 import { PPagination } from "./PPagination";
-import { Store, WpParams, SetTotalPages } from "./modules/Store";
+import { Store, WpParams } from "./modules/Store";
 import { PArticleModal } from "./PArticleModal";
-import { getWpPosts, getWpPosts2, getWpPostsImportantEn, getWpPostsImportantJa, getWpTags, getWpUsers } from "./modules/wpApiFetch";
-import { pageChange } from "./modules/pageChange";
-import { wpData } from "./test/testDataWpData";
-import { sortDataPosts } from "./modules/organizeData";
+import { getWpPosts, getWpPostsImportant, getWpTags, getWpUsers } from "./modules/wpApiFetch";
 
 
 // 3段のコンテナの整形に関してのみ記述, 
-const useStyles = makeStyles(theme => ({
-root: {
-    paddingTop: "1vh",
-    paddingBottom: "1vh",
-    maxHeight: "100%",
-    overflow: "hidden"
-},
-header: {
-    maxWidth: "100vw",
-    height: "10vh",
-    padding: 5,
-    textAlign: "center",
-    marginBottom: "1vh"
-},
-main: {
-    height: "66vh",
-    maxWidth: "100vw"
-},
-footer: {
-    height: "20vh",
-    padding: "5px",
-    maxWidth: "100vw",
-    marginTop: "1vh"
-}
+const useStyles = makeStyles(() => ({
+    root: {
+        // paddingTop: "1vh",
+        // paddingBottom: "1vh",
+        padding: "1vh 1vw",
+
+        maxHeight: "100%",
+        overflow: "hidden"
+    },
+    header: {
+        height: "10vh",
+        marginBottom: "1vh",
+
+        maxWidth: "98vw",
+        padding: 5,
+        textAlign: "center",
+    },
+    main: {
+        maxWidth: "98vw",
+        height: "66vh",
+    },
+    footer: {
+        maxWidth: "98vw",
+        height: "20vh",
+        padding: "5px",
+        marginTop: "1vh"
+    }
 }));
 
 export type SetArticles = (data: any) => void
+export type SetArticlesImportant = (data: any) => void
 export type SetArticlesImportantEn = (data: any) => void
 export type SetArticlesImportantJa = (data: any) => void
 export type SetTags = (data: any) => void
@@ -51,24 +53,26 @@ type Props = {
     classes: Record<"root" | "header" | "main" | "footer", string>
     wpParams: WpParams
     isLoading: boolean
-    startLoading: () => void
-    endLoading: () => void
-    setArticles: SetArticles
+    getPosts: () => Promise<void>
+    getWpPostsImportant: SetArticlesImportant
     setArticlesImportantEn: SetArticlesImportantEn
     setArticlesImportantJa: SetArticlesImportantJa
     setTags: SetTags,
     setUsers: SetUsers,
-    setTotalPages: SetTotalPages
 }
 
 const AppContainer = ({presenter}: any)=> {
     const classes = useStyles();
     const { wpParams, dispatchWpData, appState, dispatchAppState, setTotalPages } = React.useContext(Store);
     const isLoading = appState.isLoading
-    const startLoading = () => dispatchAppState({type: "START_LOADING"})
     const endLoading = () => dispatchAppState({type: "END_LOADING"})
     const setArticles = (data: any) =>
         dispatchWpData({ type: "SET_ARTICLES", payload: data });
+
+    const getPosts = async function() {
+        await getWpPosts({ wpParams, setArticles, setTotalPages })
+        endLoading()
+    }
     const setArticlesImportantEn = (data: any) =>
         dispatchWpData({ type: "SET_ARTICLES_IMPORTANT_EN", payload: data });
     const setArticlesImportantJa = (data: any) =>
@@ -81,10 +85,10 @@ const AppContainer = ({presenter}: any)=> {
     const props = {
     classes,
     wpParams,
-        isLoading,
-    startLoading,
-        endLoading,
+    isLoading,
+    getPosts,
     setArticles,
+    getWpPostsImportant,
     setArticlesImportantEn,
     setArticlesImportantJa,
     setTags,
@@ -98,27 +102,20 @@ const AppPresenter = ({
     classes,
     wpParams,
     isLoading,
-    startLoading,
-    endLoading,
-    setArticles,
+    getPosts,
+    getWpPostsImportant,
     setArticlesImportantEn,
     setArticlesImportantJa,
     setTags,
     setUsers,
-    setTotalPages
 }: Props) => {
-
     React.useEffect(() => {
-        startLoading()
-        getWpPosts2({ wpParams, setArticles, setTotalPages, endLoading });
+        getPosts()
     }, [wpParams]);
 
-    React.useEffect (() => {
-        getWpPostsImportantEn(setArticlesImportantEn)
-    },[])
-    React.useEffect (() => {
-        getWpPostsImportantJa(setArticlesImportantJa)
-    },[])
+    React.useEffect(() => {          
+        getWpPostsImportant({ setArticlesImportantEn, setArticlesImportantJa});
+    }, []);
     React.useEffect(() => {          
         getWpTags(setTags);
     }, []);
@@ -127,26 +124,26 @@ const AppPresenter = ({
     }, []);
 
     return (
-        <Grid
+      <Grid
         spacing={0}
         container
         direction="column"
         justify="center"
         alignItems="stretch"
-        >
+      >
         <Grid item className={classes.header}>
-            <PHeader />
+          <PHeader />
         </Grid>
         <Grid item className={classes.main}>
-            {(!isLoading) ? <PMain />: null}
+          {!isLoading ? <PMain /> : <Skeleton />}
         </Grid>
         <Grid item className={classes.footer}>
-            <PPagination />
-            <PFooter />
+          <PPagination />
+          <PFooter />
         </Grid>
         <PArticleModal />
         <PModal />
-        </Grid>
+      </Grid>
     );
 };
 

@@ -26,8 +26,6 @@ export function sortDataPosts(data: datas) {
             featuredImg: index.jetpack_featured_media_url
         });
     });
-    console.log(articles);
-
     return articles;
 }
 
@@ -38,7 +36,7 @@ type UserData = {
 // wpData.articlesのauthorのみをnumberからstringに返る関数
 export function setAuthorName(articles: SortDataPosts, wpData: WpData): SortDataPosts {
     // userデータがセットされていないときは機能しないのでarticleをそのまま返す
-    if (wpData.users.length == 0) {
+    if (wpData.users.length === 0) {
         return articles
     }
     // ユーザーIDと名前の対応表をつくる
@@ -49,8 +47,8 @@ export function setAuthorName(articles: SortDataPosts, wpData: WpData): SortData
         return item
     })
     // 対応表のuserDataをもとにnameをセット
-    const result = articles.map((value, index) => {
-        const target = userData.filter(item => value.authorId == item.authorId)
+    const result = articles.map((value) => {
+        const target = userData.filter(item => value.authorId === item.authorId)
         value.authorName = target[0].authorName
         return value
     })
@@ -68,13 +66,6 @@ export function formatDate(articles: SortDataPosts): SortDataPosts {
     })
     return formatedDateData
 }
-
-// export function setAuthorImg(articles: SortDataPosts): SortDataPosts {
-//     let newArticles: SortDataPosts
-
-
-//     return newArticles
-// }
 
 export type SortDataTags = {
     tagsJa: {
