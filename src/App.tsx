@@ -6,41 +6,39 @@ import { PModal } from "./PModal";
 import { PHeader } from "./PHeader"; 
 import { PMain } from "./PMain";
 import { PFooter } from "./PFooter";
-import { PPagination } from "./PPagination";
-import { Store, WpParams } from "./modules/Store";
+import { Store } from "./modules/Store";
 import { PArticleModal } from "./PArticleModal";
 import { getWpPosts, getWpPostsImportant, getWpTags, getWpUsers } from "./modules/wpApiFetch";
+import { ThemeContext, ThemeType } from "./modules/ThemeContext";
 
 
 // 3段のコンテナの整形に関してのみ記述, 
-const useStyles = makeStyles(() => ({
+// 枠の設定、header,footerの最大値の設定
+const useStyles = makeStyles({
     root: {
-        // paddingTop: "1vh",
-        // paddingBottom: "1vh",
-        padding: "1vh 1vw",
-
-        maxHeight: "100%",
-        overflow: "hidden"
+        overflow: "hidden",
+        position: "fixed",
+        padding: (themes: ThemeType) => themes.app.padding,
+        // width: (themes: ThemeType) => themes.app.width,
+        // height: (themes: ThemeType) => themes.app.height,
+        width: "100vw",
+        height: "100vh",
     },
     header: {
-        height: "10vh",
-        marginBottom: "1vh",
-
-        maxWidth: "98vw",
-        padding: 5,
-        textAlign: "center",
+        marginBottom: (themes: ThemeType) => themes.pHeader.marginBottom,
+        width: (themes: ThemeType) => themes.pHeader.width,
+        height: (themes: ThemeType) => themes.pHeader.height,
     },
     main: {
-        maxWidth: "98vw",
-        height: "66vh",
+        width: (themes: ThemeType) => themes.pMain.width,
+        height: (themes: ThemeType) => themes.pMain.height,
     },
     footer: {
-        maxWidth: "98vw",
-        height: "20vh",
-        padding: "5px",
-        marginTop: "1vh"
+        marginTop: (themes: ThemeType) => themes.pFooter.marginTop,
+        width: (themes: ThemeType) => themes.pFooter.width,
+        height: (themes: ThemeType) => themes.pFooter.height,
     }
-}));
+});
 
 export type SetArticles = (data: any) => void
 export type SetArticlesImportant = (data: any) => void
@@ -51,18 +49,12 @@ export type SetUsers = (data: any) => void
 
 type Props = {
     classes: Record<"root" | "header" | "main" | "footer", string>
-    wpParams: WpParams
     isLoading: boolean
-    getPosts: () => Promise<void>
-    getWpPostsImportant: SetArticlesImportant
-    setArticlesImportantEn: SetArticlesImportantEn
-    setArticlesImportantJa: SetArticlesImportantJa
-    setTags: SetTags,
-    setUsers: SetUsers,
 }
 
 const AppContainer = ({presenter}: any)=> {
-    const classes = useStyles();
+    const themes = React.useContext(ThemeContext);
+    const classes = useStyles(themes)
     const { wpParams, dispatchWpData, appState, dispatchAppState, setTotalPages } = React.useContext(Store);
     const isLoading = appState.isLoading
     const endLoading = () => dispatchAppState({type: "END_LOADING"})
@@ -82,33 +74,6 @@ const AppContainer = ({presenter}: any)=> {
     const setUsers = (data: any) =>
         dispatchWpData({ type: "SET_USERS", payload: data });
 
-    const props = {
-    classes,
-    wpParams,
-    isLoading,
-    getPosts,
-    setArticles,
-    getWpPostsImportant,
-    setArticlesImportantEn,
-    setArticlesImportantJa,
-    setTags,
-    setUsers,
-    setTotalPages
-    };
-    return presenter(props)
-}
-
-const AppPresenter = ({
-    classes,
-    wpParams,
-    isLoading,
-    getPosts,
-    getWpPostsImportant,
-    setArticlesImportantEn,
-    setArticlesImportantJa,
-    setTags,
-    setUsers,
-}: Props) => {
     React.useEffect(() => {
         getPosts()
     }, [wpParams]);
@@ -123,8 +88,24 @@ const AppPresenter = ({
         getWpUsers(setUsers);
     }, []);
 
+    const props = {
+    classes,
+    isLoading,
+    };
+
+    return presenter(props)
+}
+
+const AppPresenter = ({
+    classes,
+    isLoading,
+}: Props) => {
+
     return (
+        <div className={classes.root}>
+
       <Grid
+                // className={classes.root}
         spacing={0}
         container
         direction="column"
@@ -138,12 +119,13 @@ const AppPresenter = ({
           {!isLoading ? <PMain /> : <Skeleton />}
         </Grid>
         <Grid item className={classes.footer}>
-          <PPagination />
           <PFooter />
         </Grid>
         <PArticleModal />
         <PModal />
       </Grid>
+        </div>
+
     );
 };
 

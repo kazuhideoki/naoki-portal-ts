@@ -11,8 +11,17 @@ import {
     Person,
     Instagram
 } from "@material-ui/icons";
+import { ThemeContext } from './modules/ThemeContext';
+import { makeStyles } from '@material-ui/core';
+
+const useStyle = makeStyles({
+    root: {
+        display: "flex",
+    }
+})
 
 type Props = {
+    classes: Record<"root", string>
     currentPage: number
     openModal: (modalName: string) => void
     setParams: (type: any) => void
@@ -20,6 +29,8 @@ type Props = {
 }
 
 const PPaginationContainer = ({ presenter }: any) => {
+    const themes = React.useContext(ThemeContext)
+    const classes = useStyle(themes)
     const { wpParams, dispatchWpParams, dispatchAppState, totalPages } = React.useContext(
       Store
     );
@@ -36,6 +47,7 @@ const PPaginationContainer = ({ presenter }: any) => {
     };
     
     const props = {
+        classes,
         currentPage,
         openModal,
         setParams,
@@ -46,6 +58,7 @@ const PPaginationContainer = ({ presenter }: any) => {
 }
 
 const PPaginationPresenter = ({
+    classes,
     currentPage,
     openModal,
     setParams,
@@ -126,7 +139,7 @@ const PPaginationPresenter = ({
     }
 
     return (
-        <>
+        <div className={classes.root}>
             <HomeButton/>
             <Tag/>
             <Author/>
@@ -137,7 +150,7 @@ const PPaginationPresenter = ({
             <DisplayNumbers/>
             <Next/>
             <Oldest/>
-        </>
+        </div>
     );
 };
 

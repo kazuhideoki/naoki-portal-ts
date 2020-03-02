@@ -5,7 +5,6 @@ import { sortDataPosts } from "./modules/organizeData";
 import { bindOnclick } from "./modules/bindOnclick";
 import { TransitionProps } from '@material-ui/core/transitions';
 import {
-    Paper,
     Dialog,
     DialogContent,
     DialogContentText,
@@ -13,6 +12,7 @@ import {
     withStyles
 } from "@material-ui/core";
 import { HighlightOff } from "@material-ui/icons";
+import { StyledPaper } from './StyledComponent/StyledPaper';
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -112,19 +112,19 @@ const PArticleModalPresenter = ({
         singleArticle = "<h1>" + article.title + "</h1>" + article.content;
  
         content = (
-        <Paper>
+            <StyledPaper>
             <div
             ref={ArticleRef}
             id="p_article_modal"
             className="content"
             dangerouslySetInnerHTML={{ __html: singleArticle }}
             />
-        </Paper>
+            </StyledPaper>
         );
     }
 
     //   記事ページのリンク先を取得、onClickでリンク先ページに遷移できるようにバインド
-    React.useLayoutEffect(() => {
+    React.useEffect(() => {
         bindOnclick(getAndShowLinkPage, ArticleRef);
     }, [wpData.articleModal]);
     

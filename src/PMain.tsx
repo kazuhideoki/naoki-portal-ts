@@ -1,48 +1,52 @@
 import React from "react";
 import { ThemeContext } from "./modules/ThemeContext";
 import { Store, WpData, WpParams } from "./modules/Store";
-import { ThemeContextProps } from "./modules/ThemeContext";
+import { ThemeType } from "./modules/ThemeContext";
 import { formatDate } from "./modules/organizeData";
 import { sortDataPosts, SortDataPosts, setAuthorName } from "./modules/organizeData";
 import { staffImg } from "./img/staff/staffImg";
 
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { pickStaffImg } from "./modules/pickStaffImg";
+import { StyledPaper } from "./StyledComponent/StyledPaper";
 
 const useStyles = makeStyles({
     root: {
-        overflow: "scroll"
+        overflow: "scroll",
+        height: "100%",
     },
     item: {
-        margin: '5px',
+        marginLeft: "5px",
+        marginRight: "5px",
     },
     article: {
-        height: "60vh",
         width: 400
     },
     staffImg: {
-        width: 100
+        width: 90
     },
     img: {
-        width: '100%'
-    },
+        width: "100%",
+        height: 100
+    }
 });
 
 type Props = {
     wpParams: WpParams
     wpData: WpData,
     classes: Record<"root" | "item" | "article" | "staffImg" | "img", string>
-    elevation: ThemeContextProps["elevation"],
+    elevation: ThemeType["elevation"],
     articles: SortDataPosts,
     setAndOpenArticleModal: (data: object[]) => void
 }
 
 const PMainContainer = ({presenter}: any) => {
-    const classes = useStyles();
-    const { elevation } = React.useContext(ThemeContext);
+    const themes = React.useContext(ThemeContext);
+    const elevation = themes.elevation
+    const classes = useStyles(themes);
 
-    const { wpParams, wpData, dispatchWpData, appState, dispatchAppState } = React.useContext(Store);
+    const { wpParams, wpData, dispatchWpData, dispatchAppState } = React.useContext(Store);
     // 利用するデータを抜き出し、authorをnumberから名前に変える
     let articles = sortDataPosts(wpData.articles);
         articles = setAuthorName(articles, wpData)
@@ -81,13 +85,13 @@ const PMainPresenter = ({
         displayArticles = articles.map((value, key: number) => {
             return (
             <Grid item key={key} className={classes.item}>
-                <Paper
+                    <StyledPaper
                     className={classes.article}
                     elevation={elevation}
                 >
                     <h3>{value.date}</h3>
                     <div dangerouslySetInnerHTML={{ __html: value.content }} />
-                </Paper>
+                    </StyledPaper>
             </Grid>
             )
         })
@@ -100,10 +104,9 @@ const PMainPresenter = ({
         
             return (
                 <Grid item key={key} className={classes.item} >
-                    <Paper
+                    {/* <StyledPaper
                     className={classes.article}
                     onClick={() => setAndOpenArticleModal([wpData.articles[key]])}
-                    elevation={elevation}
                     id={`p_main_` + key}
                     >
                         <h2>{value.title} </h2>
@@ -117,13 +120,31 @@ const PMainPresenter = ({
                         src={value.featuredImg}
                         alt={value.title}
                         />
-                    </Paper>
+                    </StyledPaper> */}
+                    <Card className={classes.article} id={`p_main_` + key} onClick={() => setAndOpenArticleModal([wpData.articles[key]])}>
+                        <CardActionArea>
+                            <CardMedia
+                            className={classes.img}
+                            image={value.featuredImg}
+                            title={value.title}
+                            />
+                            <CardContent>
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    <h3>{value.title} </h3>
+                                    <p>{value.date}<img className={classes.staffImg} src={(img) ? img : ''} alt='' />{value.authorName}</p>
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" component="p">
+                                    <div dangerouslySetInnerHTML={{ __html: value.excerpt }} />
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
                 </Grid>
             )
         });
     // 記事がもしなかった場合の表示
     } else {
-        displayArticles = <Paper>No articles</Paper>;
+        displayArticles = <StyledPaper>No articles</StyledPaper>;
     }
 
     return (

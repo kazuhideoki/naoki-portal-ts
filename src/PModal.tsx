@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { ThemeContext, ThemeContextProps } from "./modules/ThemeContext";
+import React from "react";
+import { ThemeContext, ThemeType } from "./modules/ThemeContext";
 import { Store, WpParams } from "./modules/Store";
 import { sortDataTags, SortDataTags, sortDataUsers, SortDataUsers } from "./modules/organizeData";
 import { Tag, Author } from "./modules/wpParamsReducer";
@@ -21,6 +21,7 @@ import googleQr from "./img/review_qr_google.png";
 import facebookQr from "./img/review_qr_facebook.png";
 import { pickStaffImg } from "./modules/pickStaffImg";
 import { staffImg } from "./img/staff/staffImg";
+import { StyledPaper } from "./StyledComponent/StyledPaper";
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -34,11 +35,19 @@ const StyledDialog = withStyles({
     }
 })(Dialog);
 
+const useStyle = makeStyles({
+    staffImg: {
+        width: 50
+    },
+        icon: { fontSize: (themes: ThemeType) => themes.icon }
+    }
+);
+
 type Props = {
+    classes: Record<"icon" | "staffImg", string>
     wpParams: WpParams,
     tags: SortDataTags
     authors: SortDataUsers
-    theme: ThemeContextProps,
     setModal: AppState["setModal"],
     isModalOpen: AppState["isModalOpen"]
     openModal: (name: string) => void,
@@ -48,7 +57,9 @@ type Props = {
 type SetParamsAndClose = Tag | Author
 
 const PModalContainer = ({presenter}: any) => {
-    const theme = useContext(ThemeContext);
+    const themes = React.useContext(ThemeContext);
+    const classes = useStyle(themes);
+
     const { wpParams, wpData, dispatchWpParams, appState, dispatchAppState } = React.useContext(Store)
     const tags = sortDataTags(wpData.tags);
     const authors = sortDataUsers(wpData.users);
@@ -67,10 +78,10 @@ const PModalContainer = ({presenter}: any) => {
     }
 
     const props = {
+        classes,
         wpParams,
         tags,
         authors,
-        theme,
         setModal,
         isModalOpen,
         openModal,
@@ -82,38 +93,31 @@ const PModalContainer = ({presenter}: any) => {
 
 }
 
-const useStyle = makeStyles({
-    staffImg: {
-        width: 50
-    }
-});
-
 const PModalPresenter = ({
+    classes,
     wpParams,
     tags,
     authors,
-    theme,
     setModal,
     isModalOpen,
     openModal,
     closeModal,
     setParamsAndClose,
 }: Props) => {
-    const classes = useStyle()
     let modal;
     switch (setModal) {
         case "magazines":
             modal = (
-                <>
+              <>
                 Magzter
-                <a href="fb179689808731959://" >
-                    <ImportContacts style={theme.icon} />
+                <a href="fb179689808731959://">
+                  <ImportContacts className={classes.icon} />
                 </a>
                 楽天マガジン
-                <a href="rmagazine://" >
-                    <ImportContacts style={theme.icon} />
+                <a href="rmagazine://">
+                  <ImportContacts className={classes.icon} />
                 </a>
-                </>
+              </>
             );
         break;
 
@@ -132,18 +136,21 @@ const PModalPresenter = ({
         break;
         case "menus":
             modal = (
-                <>
+              <>
                 <FreeBreakfastTwoTone
-                    style={theme.icon}
-                    onClick={ () => openModal("menuDrink")}
+                  className={classes.icon}
+                  onClick={() => openModal("menuDrink")}
                 />
-                <ListTwoTone style={theme.icon} onClick={ () => openModal("menu")} />
+                <ListTwoTone
+                  className={classes.icon}
+                  onClick={() => openModal("menu")}
+                />
                 <img
-                    src={treatmentIcon}
-                    alt=""
-                    onClick={ () => openModal("menuTreatment")}
+                  src={treatmentIcon}
+                  alt=""
+                  onClick={() => openModal("menuTreatment")}
                 />
-                </>          
+              </>
             );
         break;
         case "menuDrink":
@@ -207,9 +214,9 @@ const PModalPresenter = ({
         TransitionComponent={Transition}
         onClose={closeModal}
         >
-            <Paper>
+            <StyledPaper>
                 {modal}
-            </Paper>
+            </StyledPaper>
         </StyledDialog>
     );
 };

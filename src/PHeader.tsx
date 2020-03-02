@@ -1,27 +1,32 @@
 import React from "react";
 import { Store } from './modules/Store'
-import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import { formatDate } from "./modules/organizeData";
 import { sortDataPosts } from "./modules/organizeData";
+import { ThemeContext, ThemeType } from "./modules/ThemeContext";
+import { StyledPaper } from "./StyledComponent/StyledPaper";
 
 const useStyles = makeStyles({
-    root: {
-        height: '100%',
-        padding: 10
-    },
-    img: {
-        heigth: "100%"
-    }
+  root: {
+      textAlign: "center",
+      height: "100%"
+  },
+  img: {
+    height: 40
+  },
+  p: {
+      margin: 0
+  }
 });
 type Props = {
-    classes: Record<"root" | "img", string>
+    classes: Record<"root" | "img" | "p", string>
     SortedNotice: any[]
     setAndOpenArticleModal: () => void
 }
 
 const PHeaderContainer = ({presenter}: any) => {
-    const classes = useStyles();
+    const themes = React.useContext(ThemeContext);
+    const classes = useStyles(themes);
 
     const { wpData, wpParams, dispatchWpData, dispatchAppState } = React.useContext(Store);
     let notice = (wpParams.isJa) ? wpData.articlesImportantJa : wpData.articlesImportantEn
@@ -45,8 +50,8 @@ const PHeaderPresenter = ({ classes, SortedNotice, setAndOpenArticleModal }: Pro
     let displayNotice
     if (SortedNotice) {
         displayNotice = SortedNotice.map((value, key) => (
-            <Paper key={key} className={classes.root} onClick={() => setAndOpenArticleModal()}>
-                <p>
+            <StyledPaper key={key} className={classes.root} onClick={() => setAndOpenArticleModal()}>
+                <p className={classes.p}>
                     <img
                     className={classes.img}
                     src={value.featuredImg}
@@ -54,11 +59,11 @@ const PHeaderPresenter = ({ classes, SortedNotice, setAndOpenArticleModal }: Pro
                     />
                     {value.title} {value.date}
                 </p>
-            </Paper>
+            </StyledPaper>
          ))   
     }
 
-    return displayNotice
+    return <>{displayNotice}</>
 
 }
 
