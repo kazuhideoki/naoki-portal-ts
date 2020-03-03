@@ -5,6 +5,7 @@ import { formatDate } from "./modules/organizeData";
 import { sortDataPosts } from "./modules/organizeData";
 import { ThemeContext, ThemeType } from "./modules/ThemeContext";
 import { StyledPaper } from "./StyledComponent/StyledPaper";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
@@ -51,16 +52,20 @@ const PHeaderPresenter = ({ classes, SortedNotice, setAndOpenArticleModal }: Pro
     if (SortedNotice) {
         displayNotice = SortedNotice.map((value, key) => (
             <StyledPaper key={key} className={classes.root} onClick={() => setAndOpenArticleModal()}>
-                <p className={classes.p}>
-                    <img
-                    className={classes.img}
-                    src={value.featuredImg}
-                    alt={value.title}
-                    />
-                    {value.title} {value.date}
-                </p>
+                {/* <p className={classes.p}> */}
+                    <Typography variant="subtitle1">
+                        <img
+                            className={classes.img}
+                            src={value.featuredImg}
+                            alt={value.title}
+                        />
+                        {value.title} {value.date}
+                    </Typography>
+                {/* </p> */}
             </StyledPaper>
          ))   
+    }else {
+        displayNotice = <StyledPaper><h2>Welcome to Naoki Hair Dressing!</h2></StyledPaper>
     }
 
     return <>{displayNotice}</>

@@ -1,7 +1,6 @@
 import React from "react";
 import { ThemeContext } from "./modules/ThemeContext";
 import { Store, WpData, WpParams } from "./modules/Store";
-import { ThemeType } from "./modules/ThemeContext";
 import { formatDate } from "./modules/organizeData";
 import { sortDataPosts, SortDataPosts, setAuthorName } from "./modules/organizeData";
 import { staffImg } from "./img/staff/staffImg";
@@ -17,33 +16,50 @@ const useStyles = makeStyles({
         height: "100%",
     },
     item: {
-        marginLeft: "5px",
-        marginRight: "5px",
+        height: "100%",
     },
     article: {
-        width: 400
+        width: 350,
+        height: "100%",
     },
-    staffImg: {
-        width: 90
+    insta: {
+        width: 408,
+        height: "100%",
+    },
+    instaDiv: {
+        position: "relative",
+    },
+    titleImgDiv: {
+        position: "relative",
+    },
+    title: {
+        position: "absolute",
+        bottom: 0, 
+        width: "100%",
+        padding: "40px 10px 0 10px",
+        background: "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5074404761904762) 33%, rgba(255,255,255,1) 100%)",
     },
     img: {
+        objectFit: "cover",
         width: "100%",
-        height: 100
-    }
+        height: 300,
+        backgroundSize: "cover",
+    },
+    staffImg: {
+        width: 50
+    },
 });
 
 type Props = {
     wpParams: WpParams
     wpData: WpData,
-    classes: Record<"root" | "item" | "article" | "staffImg" | "img", string>
-    elevation: ThemeType["elevation"],
+    classes: Record<"root" | "item" | "article" | "titleImgDiv" | "title" | "staffImg" | "img" | "insta" | "instaDiv", string>
     articles: SortDataPosts,
     setAndOpenArticleModal: (data: object[]) => void
 }
 
 const PMainContainer = ({presenter}: any) => {
     const themes = React.useContext(ThemeContext);
-    const elevation = themes.elevation
     const classes = useStyles(themes);
 
     const { wpParams, wpData, dispatchWpData, dispatchAppState } = React.useContext(Store);
@@ -61,7 +77,6 @@ const PMainContainer = ({presenter}: any) => {
         wpParams,
         wpData,
         classes,
-        elevation,
         articles,
         setAndOpenArticleModal,
     };
@@ -74,24 +89,34 @@ const PMainPresenter = ({
     wpParams,
     wpData,
     classes,
-    elevation,
     articles,
     setAndOpenArticleModal,
 }: Props) => {
     let displayArticles;
+    const instaRef = React.useRef(null)
 
     //   インスタ表示のときはレイアウトを変える
     if (articles && wpParams.categories === 187) {
         displayArticles = articles.map((value, key: number) => {
             return (
+            // <Grid item key={key} className={classes.item}>
+            //         <StyledPaper
+            //         className={classes.article}
+            //     >
+            //         <h3>{value.date}</h3>
+            //         <div dangerouslySetInnerHTML={{ __html: value.content }} />
+            //         </StyledPaper>
+            // </Grid>
             <Grid item key={key} className={classes.item}>
-                    <StyledPaper
-                    className={classes.article}
-                    elevation={elevation}
-                >
-                    <h3>{value.date}</h3>
-                    <div dangerouslySetInnerHTML={{ __html: value.content }} />
-                    </StyledPaper>
+                    <Card
+                        variant="outlined"
+                        className={classes.insta}
+                    >
+                        <Typography gutterBottom variant="h6" align="right">
+                            <h3>{value.date}</h3>
+                        </Typography>
+                        <div className={classes.instaDiv}dangerouslySetInnerHTML={{ __html: value.content }} />
+                    </Card>
             </Grid>
             )
         })
@@ -103,37 +128,24 @@ const PMainPresenter = ({
             const img = pickStaffImg(staffImg, num)
         
             return (
-                <Grid item key={key} className={classes.item} >
-                    {/* <StyledPaper
-                    className={classes.article}
-                    onClick={() => setAndOpenArticleModal([wpData.articles[key]])}
-                    id={`p_main_` + key}
-                    >
-                        <h2>{value.title} </h2>
-                        <h3>{value.authorName}</h3>
-                        <h3>{value.date}</h3>
-                        <img className={classes.staffImg} src={(img) ? img : ''} alt=''/>
-
-                        <div  dangerouslySetInnerHTML={{ __html: value.excerpt }} />
-                        <img
-                        className={classes.img}
-                        src={value.featuredImg}
-                        alt={value.title}
-                        />
-                    </StyledPaper> */}
-                    <Card className={classes.article} id={`p_main_` + key} onClick={() => setAndOpenArticleModal([wpData.articles[key]])}>
+                <Grid item key={key} className={classes.item}>
+                    <Card variant="outlined" className={classes.article} id={`p_main_` + key} onClick={() => setAndOpenArticleModal([wpData.articles[key]])}>
                         <CardActionArea>
-                            <CardMedia
-                            className={classes.img}
-                            image={value.featuredImg}
-                            title={value.title}
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    <h3>{value.title} </h3>
-                                    <p>{value.date}<img className={classes.staffImg} src={(img) ? img : ''} alt='' />{value.authorName}</p>
+                            <div className={classes.titleImgDiv}>
+                                <img
+                                    className={classes.img}
+                                    src={value.featuredImg}
+                                    alt={value.title}
+                                />
+                                <Typography className={classes.title} variant="h5" >
+                                    {value.title}
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary" component="p">
+                            </div>
+                            <CardContent>
+                                <Typography gutterBottom variant="h6" align="right">
+                                    {value.date} <img className={classes.staffImg} src={(img) ? img : ''} alt='' /> {value.authorName}
+                                </Typography>
+                                <Typography variant="body1">
                                     <div dangerouslySetInnerHTML={{ __html: value.excerpt }} />
                                 </Typography>
                             </CardContent>
@@ -147,8 +159,22 @@ const PMainPresenter = ({
         displayArticles = <StyledPaper>No articles</StyledPaper>;
     }
 
+    // instaのiframeの表示サイズを変更させる
+    React.useEffect(() => {
+        console.log(instaRef.current);
+        if (wpParams.categories === 187) {
+            //@ts-ignore
+            const iframe = instaRef.current.getElementsByClassName("iframe-class")
+            console.log(iframe);
+            Array.prototype.forEach.call(iframe, function (element: any) {
+                element.style.transform = "scale(1.2)"
+                element.style.transformOrigin = "left"
+            })
+        }  
+    })
+
     return (
-        <Grid id='p_main' container wrap="nowrap" className={classes.root}>
+        <Grid id='p_main' container wrap="nowrap" className={classes.root} spacing={2} ref={instaRef}>
             {displayArticles}
         </Grid>
         

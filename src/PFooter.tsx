@@ -79,7 +79,7 @@ const PFooterPresenter = ({ w, classes, themes, changeLang, openModal }: Props) 
     
         <StyledPaper className={classes.root}>
         <PPagination/>
-        <Grid container justify="center">
+        <Grid container justify="center" spacing={2}>
           <Grid item className={classes.iconText}>
             <Translate
               onClick={() => changeLang()}

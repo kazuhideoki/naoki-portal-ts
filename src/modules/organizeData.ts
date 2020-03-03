@@ -20,7 +20,7 @@ export function sortDataPosts(data: datas) {
             excerpt: index.excerpt.rendered,
             content: index.content.rendered,
             link: index.link,
-            date: index.modified,
+            date: index.date,
             authorId: index.author,
             authorName: null,
             featuredImg: index.jetpack_featured_media_url

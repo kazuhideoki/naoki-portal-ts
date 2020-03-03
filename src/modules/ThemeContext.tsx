@@ -1,21 +1,21 @@
 import React from "react";
 
-const screenWidth = window.parent.screen.width
-const screenHeight = window.parent.screen.height
+const screenWidth = 100
+const screenHeight = 100
 
-const portalPadding = 10
+const portalPadding = 0
 const portalWidth = screenWidth - portalPadding * 2
 const portalHeight = screenHeight - portalPadding * 2
 
-const pHeaderMarginBottom = 5
+const pHeaderMarginBottom = 1
 const pHeaderWidth = screenWidth - portalPadding * 2
-const pHeaderHeight = 80
+const pHeaderHeight = 7
 
-const pFooterMarginTop = 5
+const pFooterMarginTop = 1
 const pFooterWidth = screenWidth - portalPadding * 2
-const pFooterHeight = 170
+const pFooterHeight = 22
 
-const pMainMargin = 5
+const pMainMargin = 1
 const pMainWidth = screenWidth - pMainMargin * 2
 const pMainHeight = screenHeight - pHeaderHeight - pHeaderMarginBottom - pFooterHeight - pFooterMarginTop - portalPadding * 2
 
@@ -44,9 +44,8 @@ const themes = {
    
 
     // fontSize
-    icon: "100px",
-    // Paperのかげの程度を設定
-    elevation: 9,
+    icon: 90,
+    iconSmall : 30,
 };
 
 export type ThemeType = typeof themes;
@@ -54,14 +53,6 @@ export type ThemeType = typeof themes;
 export const ThemeContext = React.createContext({} as ThemeType);
 
 export const ThemeProvider = ({ children }: any) => {
-
-    window.addEventListener("orientationchange", function () {
-        /* 向き切り替え時の処理 */
-    });
-
-    React.useEffect(() => {
-
-    })
 
     return (
         <ThemeContext.Provider value={themes}>

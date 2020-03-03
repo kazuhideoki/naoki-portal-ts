@@ -15,28 +15,27 @@ import { ThemeContext, ThemeType } from "./modules/ThemeContext";
 // 3段のコンテナの整形に関してのみ記述, 
 // 枠の設定、header,footerの最大値の設定
 const useStyles = makeStyles({
+    // vh,vwでデバイスの向きに対応することができる。
     root: {
         overflow: "hidden",
         position: "fixed",
-        padding: (themes: ThemeType) => themes.app.padding,
-        // width: (themes: ThemeType) => themes.app.width,
-        // height: (themes: ThemeType) => themes.app.height,
         width: "100vw",
         height: "100vh",
+        padding: (themes: ThemeType) => `${themes.app.padding}vh ${themes.app.padding}vw`,
     },
     header: {
-        marginBottom: (themes: ThemeType) => themes.pHeader.marginBottom,
-        width: (themes: ThemeType) => themes.pHeader.width,
-        height: (themes: ThemeType) => themes.pHeader.height,
+        marginBottom: (themes: ThemeType) => themes.pHeader.marginBottom + 'vh',
+        width: (themes: ThemeType) => themes.pHeader.width + 'vw',
+        height: (themes: ThemeType) => themes.pHeader.height + 'vh',
     },
     main: {
-        width: (themes: ThemeType) => themes.pMain.width,
-        height: (themes: ThemeType) => themes.pMain.height,
+        width: (themes: ThemeType) => themes.pMain.width + 'vw',
+        height: (themes: ThemeType) => themes.pMain.height + 'vh',
     },
     footer: {
-        marginTop: (themes: ThemeType) => themes.pFooter.marginTop,
-        width: (themes: ThemeType) => themes.pFooter.width,
-        height: (themes: ThemeType) => themes.pFooter.height,
+        marginTop: (themes: ThemeType) => themes.pFooter.marginTop + 'vh',
+        width: (themes: ThemeType) => themes.pFooter.width + 'vw',
+        height: (themes: ThemeType) => themes.pFooter.height + 'vh',
     }
 });
 

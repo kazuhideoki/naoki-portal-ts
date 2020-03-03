@@ -11,17 +11,24 @@ import {
     Person,
     Instagram
 } from "@material-ui/icons";
-import { ThemeContext } from './modules/ThemeContext';
+import { ThemeContext, ThemeType } from './modules/ThemeContext';
 import { makeStyles } from '@material-ui/core';
 
 const useStyle = makeStyles({
     root: {
         display: "flex",
-    }
+        justifyContent: "center",
+    },
+    icon: {
+        fontSize: (themes: ThemeType) => themes.iconSmall,
+    },
+    nums: {
+        fontSize: (themes: ThemeType) => themes.iconSmall * 0.8,
+    },
 })
 
 type Props = {
-    classes: Record<"root", string>
+    classes: Record<"root" | "icon" | "nums", string>
     currentPage: number
     openModal: (modalName: string) => void
     setParams: (type: any) => void
@@ -66,17 +73,17 @@ const PPaginationPresenter = ({
 }: Props) => { 
     const HomeButton = () => {
         const arg = { type: "MAINHOME" };
-        return <Home onClick={() => setParams(arg)} />;
+        return <Home onClick={() => setParams(arg)} className={classes.icon}/>;
     };
-    const Tag = () => <Label onClick={ () => openModal("tag")} />;
-    const Author = () => <Person onClick={ () => openModal("author")} />;
+    const Tag = () => <Label onClick={() => openModal("tag")} className={classes.icon}/>;
+    const Author = () => <Person onClick={() => openModal("author")} className={classes.icon}/>;
     const Insta = () => {
         const arg = { type: "INSTA" };
-        return <Instagram onClick={() => setParams(arg)} />;
+        return <Instagram onClick={() => setParams(arg)} className={classes.icon}/>;
     };
 
     const PageNumber = () => {
-        return <>【 {currentPage}/{totalPages} 】</>
+        return <p className={classes.nums}>【 {currentPage}/{totalPages} 】</p>
     }
 
     let Latest = () => <></>;
@@ -87,25 +94,25 @@ const PPaginationPresenter = ({
     if (currentPage > 3 && totalPages > 3) {
         Latest = () => {
             const arg = { type: "LATEST" };
-            return <FirstPage onClick={() => setParams(arg)} />;
+            return <FirstPage onClick={() => setParams(arg)} className={classes.icon}/>;
         };
     }
     if (!(currentPage === 1)) {
         Prev = () => {
             const arg = { type: "PREV" };
-            return <NavigateBefore onClick={() => setParams(arg)} />;
+            return <NavigateBefore onClick={() => setParams(arg)} className={classes.icon}/>;
         }
     }
     if (!(currentPage === totalPages)) {
         Next = () => {
             const arg = { type: "NEXT"};
-            return <NavigateNext onClick={() => setParams(arg)} />;
+            return <NavigateNext onClick={() => setParams(arg)} className={classes.icon}/>;
         }
     }
     if (currentPage < totalPages - 2 && totalPages > 3) {
         Oldest = () => {
             const arg = { type: "OLDEST", payload: totalPages };
-            return <LastPage onClick={() => setParams(arg)} />;
+            return <LastPage onClick={() => setParams(arg)} className={classes.icon}/>;
         }
     }
 
@@ -120,16 +127,16 @@ const PPaginationPresenter = ({
     const DisplayNumbers = () => {
         const nums = numbers.map(num => {
             if (num <= 0) {
-            return "";
+                return "";
             } else if (num > totalPages) {
-            return "";
+                return "";
             } else if (num === currentPage) {
-            return <button key={num}>{num}</button>;
+                return <button key={num} className={classes.icon}>{num}</button>;
             }
 
             const arg = { type: "NUM", payload: num };
             return (
-                <button key={num} onClick={() => setParams(arg)}> 
+                <button key={num} onClick={() => setParams(arg)} className={classes.nums}> 
                     {num}
                 </button>
             );
