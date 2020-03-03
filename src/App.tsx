@@ -10,11 +10,12 @@ import { Store } from "./modules/Store";
 import { PArticleModal } from "./PArticleModal";
 import { getWpPosts, getWpPostsImportant, getWpTags, getWpUsers } from "./modules/wpApiFetch";
 import { ThemeContext, ThemeType } from "./modules/ThemeContext";
+import { useStylesFactory } from "./modules/useStylesFactory";
 
 
 // 3段のコンテナの整形に関してのみ記述, 
 // 枠の設定、header,footerの最大値の設定
-const useStyles = makeStyles({
+const styles = {
     // vh,vwでデバイスの向きに対応することができる。
     root: {
         overflow: "hidden",
@@ -37,7 +38,7 @@ const useStyles = makeStyles({
         width: (themes: ThemeType) => themes.pFooter.width + 'vw',
         height: (themes: ThemeType) => themes.pFooter.height + 'vh',
     }
-});
+}
 
 export type SetArticles = (data: any) => void
 export type SetArticlesImportant = (data: any) => void
@@ -52,8 +53,8 @@ type Props = {
 }
 
 const AppContainer = ({presenter}: any)=> {
-    const themes = React.useContext(ThemeContext);
-    const classes = useStyles(themes)
+    const classes = useStylesFactory(styles)
+
     const { wpParams, dispatchWpData, appState, dispatchAppState, setTotalPages } = React.useContext(Store);
     const isLoading = appState.isLoading
     const endLoading = () => dispatchAppState({type: "END_LOADING"})

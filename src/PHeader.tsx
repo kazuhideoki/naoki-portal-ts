@@ -6,8 +6,21 @@ import { sortDataPosts } from "./modules/organizeData";
 import { ThemeContext, ThemeType } from "./modules/ThemeContext";
 import { StyledPaper } from "./StyledComponent/StyledPaper";
 import { Typography } from "@material-ui/core";
+import { useStylesFactory } from "./modules/useStylesFactory";
 
-const useStyles = makeStyles({
+// const useStyles = makeStyles({
+//   root: {
+//       textAlign: "center",
+//       height: "100%"
+//   },
+//   img: {
+//     height: 40
+//   },
+//   p: {
+//       margin: 0
+//   }
+// });
+const styles = {
   root: {
       textAlign: "center",
       height: "100%"
@@ -18,7 +31,8 @@ const useStyles = makeStyles({
   p: {
       margin: 0
   }
-});
+};
+
 type Props = {
     classes: Record<"root" | "img" | "p", string>
     SortedNotice: any[]
@@ -26,8 +40,9 @@ type Props = {
 }
 
 const PHeaderContainer = ({presenter}: any) => {
-    const themes = React.useContext(ThemeContext);
-    const classes = useStyles(themes);
+    // const themes = React.useContext(ThemeContext);
+    // const classes = useStyles(themes);
+    const classes = useStylesFactory(styles)
 
     const { wpData, wpParams, dispatchWpData, dispatchAppState } = React.useContext(Store);
     let notice = (wpParams.isJa) ? wpData.articlesImportantJa : wpData.articlesImportantEn

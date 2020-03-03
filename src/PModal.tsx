@@ -1,13 +1,12 @@
 import React from "react";
-import { ThemeContext, ThemeType } from "./modules/ThemeContext";
+import { ThemeType } from "./modules/ThemeContext";
 import { Store, WpParams } from "./modules/Store";
 import { sortDataTags, SortDataTags, sortDataUsers, SortDataUsers } from "./modules/organizeData";
 import { Tag, Author } from "./modules/wpParamsReducer";
 import { AppState } from "./modules/Store";
 
-import { Button, Paper, Dialog, Slide, withStyles, makeStyles } from "@material-ui/core";
+import { Button, Dialog, Slide, withStyles } from "@material-ui/core";
 import {
-    ImportContacts,
     FreeBreakfastTwoTone,
     ListTwoTone
 } from "@material-ui/icons";
@@ -15,13 +14,15 @@ import { TransitionProps } from '@material-ui/core/transitions';
 
 import treatmentIcon from "./img/menu-treatment.png";
 import menuDrink from "./img/drink-img.jpg";
-import menu from "./img/menu-img.jpg";
+import menu from "./img/menu-img.jpg"; 
 import menuTreatment from "./img/menu-treatment-img.jpg";
 import googleQr from "./img/review_qr_google.png";
 import facebookQr from "./img/review_qr_facebook.png";
 import { pickStaffImg } from "./modules/pickStaffImg";
 import { staffImg } from "./img/staff/staffImg";
 import { StyledPaper } from "./StyledComponent/StyledPaper";
+import { Magazines } from "./PModalModules/Magazines";
+import { useStylesFactory } from "./modules/useStylesFactory";
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -35,13 +36,12 @@ const StyledDialog = withStyles({
     }
 })(Dialog);
 
-const useStyle = makeStyles({
+const styles = {
     staffImg: {
         width: 50
     },
         icon: { fontSize: (themes: ThemeType) => themes.icon }
     }
-);
 
 type Props = {
     classes: Record<"icon" | "staffImg", string>
@@ -57,8 +57,7 @@ type Props = {
 type SetParamsAndClose = Tag | Author
 
 const PModalContainer = ({presenter}: any) => {
-    const themes = React.useContext(ThemeContext);
-    const classes = useStyle(themes);
+    const classes = useStylesFactory(styles);
 
     const { wpParams, wpData, dispatchWpParams, appState, dispatchAppState } = React.useContext(Store)
     const tags = sortDataTags(wpData.tags);
@@ -107,18 +106,7 @@ const PModalPresenter = ({
     let modal;
     switch (setModal) {
         case "magazines":
-            modal = (
-              <>
-                Magzter
-                <a href="fb179689808731959://">
-                  <ImportContacts className={classes.icon} />
-                </a>
-                楽天マガジン
-                <a href="rmagazine://">
-                  <ImportContacts className={classes.icon} />
-                </a>
-              </>
-            );
+            modal = <Magazines/>
         break;
 
         case "wifi":
@@ -214,9 +202,9 @@ const PModalPresenter = ({
         TransitionComponent={Transition}
         onClose={closeModal}
         >
-            <StyledPaper>
+            {/* <StyledPaper> */}
                 {modal}
-            </StyledPaper>
+            {/* </StyledPaper> */}
         </StyledDialog>
     );
 };

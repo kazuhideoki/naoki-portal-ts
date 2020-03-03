@@ -9,8 +9,9 @@ import { Grid, Paper, Card, CardActionArea, CardMedia, CardContent, Typography, 
 import { makeStyles } from "@material-ui/styles";
 import { pickStaffImg } from "./modules/pickStaffImg";
 import { StyledPaper } from "./StyledComponent/StyledPaper";
+import { useStylesFactory } from "./modules/useStylesFactory";
 
-const useStyles = makeStyles({
+const styles = {
     root: {
         overflow: "scroll",
         height: "100%",
@@ -48,7 +49,7 @@ const useStyles = makeStyles({
     staffImg: {
         width: 50
     },
-});
+}
 
 type Props = {
     wpParams: WpParams
@@ -59,8 +60,7 @@ type Props = {
 }
 
 const PMainContainer = ({presenter}: any) => {
-    const themes = React.useContext(ThemeContext);
-    const classes = useStyles(themes);
+    const classes = useStylesFactory(styles);
 
     const { wpParams, wpData, dispatchWpData, dispatchAppState } = React.useContext(Store);
     // 利用するデータを抜き出し、authorをnumberから名前に変える

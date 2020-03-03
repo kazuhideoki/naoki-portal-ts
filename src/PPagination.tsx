@@ -13,8 +13,9 @@ import {
 } from "@material-ui/icons";
 import { ThemeContext, ThemeType } from './modules/ThemeContext';
 import { makeStyles } from '@material-ui/core';
+import { useStylesFactory } from './modules/useStylesFactory';
 
-const useStyle = makeStyles({
+const styles = {
     root: {
         display: "flex",
         justifyContent: "center",
@@ -25,7 +26,7 @@ const useStyle = makeStyles({
     nums: {
         fontSize: (themes: ThemeType) => themes.iconSmall * 0.8,
     },
-})
+}
 
 type Props = {
     classes: Record<"root" | "icon" | "nums", string>
@@ -36,8 +37,7 @@ type Props = {
 }
 
 const PPaginationContainer = ({ presenter }: any) => {
-    const themes = React.useContext(ThemeContext)
-    const classes = useStyle(themes)
+    const classes = useStylesFactory(styles)
     const { wpParams, dispatchWpParams, dispatchAppState, totalPages } = React.useContext(
       Store
     );
