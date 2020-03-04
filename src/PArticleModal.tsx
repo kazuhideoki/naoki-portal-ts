@@ -11,8 +11,8 @@ import {
     Slide,
     withStyles
 } from "@material-ui/core";
-import { HighlightOff } from "@material-ui/icons";
 import { StyledPaper } from './StyledComponent/StyledPaper';
+import { CloseButton } from './molecules/CloseButton';
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -25,15 +25,6 @@ const StyledDialog = withStyles({
         height: '90vh',
     }
 })(Dialog);
-const StyledHighlightOff = withStyles({
-    root: {
-        fontSize: '100px',
-        position: 'fixed',
-        right: '50px',
-        opacity: '0.7'
-    }
-})(HighlightOff);
-
 
 export type SetSingleArticle = (data: any) => void
 export type GetAndShowLinkPage = (data: any) => void
@@ -134,10 +125,9 @@ const PArticleModalPresenter = ({
         TransitionComponent={Transition}
         onClose={closeArticleModal}
         >
-        <StyledHighlightOff onClick={closeArticleModal} />
+            <CloseButton onClick={closeArticleModal} />
             <DialogContent>
                 <DialogContentText>{(!isLoadingArticleModal) ? content : null}</DialogContentText>
-                {/* <DialogContentText>{ isLoadingArticleModal || content || null}</DialogContentText> */}
             </DialogContent>
         </StyledDialog>
     );

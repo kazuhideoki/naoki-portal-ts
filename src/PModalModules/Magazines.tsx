@@ -7,29 +7,31 @@ import { magazines } from "../modules/words";
 import { useWordsChange } from '../modules/useWordsChange';
 
 const styles = {
-    icon: { fontSize: (themes: ThemeType) => themes.icon }
+    root: {
+        display: "flex",
+    }
 }
 
-export const Magazines = () => {
+export const Magazines = (props: any) => {
     const classes = useStylesFactory(styles);
     const w = useWordsChange(magazines)
 
     return (
-        <>
+        <div className={classes.root}>
             <a href="fb179689808731959://">
                 <IconAndText
                     icon={ImportContacts}
-                    classNameIcon={classes.icon}
+                    classNameIcon={props.icon}
                     text={w.magzter}
                 />
             </a>
             <a href="rmagazine://">
                 <IconAndText
                     icon={ImportContacts}
-                    classNameIcon={classes.icon}
+                    classNameIcon={props.icon}
                     text={w.japaneseMagazine}
                 />
             </a>
-        </>
+        </div>
     );
 }

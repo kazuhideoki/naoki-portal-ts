@@ -11,13 +11,21 @@ const styles = {
 export const IconAndText = (props:any) => {
     const classes = useStylesFactory(styles)
 
+    const icon = props.img || <props.icon
+        onClick={() => props.onclick()}
+        className={props.classNameIcon}
+        {...props}
+    />
+
     return (
         <div className={classes.root}>
-        <props.icon
+        {/* <props.icon
             onClick={() => props.onclick()}
             className={props.classNameIcon}
             {...props}
-        />
+        /> */}
+        {icon}
+        
         <Typography variant="body2">
             {props.text}
         </Typography>
