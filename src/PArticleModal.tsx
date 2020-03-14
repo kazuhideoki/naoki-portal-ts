@@ -29,9 +29,9 @@ const StyledDialog = withStyles({
 })(Dialog);
 
 const styles = {
-//   dialogRoot: {
-//       padding: 0
-//   }
+  contentRoot: {
+    padding: 40
+  }
 };
 
 export type SetSingleArticle = (data: any) => void
@@ -114,15 +114,15 @@ const PArticleModalPresenter = ({
         singleArticle = "<h1>" + article.title + "</h1>" + article.content;
  
         content = (
-            // <StyledPaper>
-            // cssは別ファイルPArticleModal.scssに記述。内容がfetchしたものを直接埋め込むので。
-            <div
+          // <StyledPaper>
+          // cssは別ファイルPArticleModal.scssに記述。内容がfetchしたものを直接埋め込むので。
+          <div
             ref={ArticleRef}
             id="p_article_modal"
-            className={`content ${classes.root}`}
+            className={`pArticleModalContent ${classes.contentRoot}`}
             dangerouslySetInnerHTML={{ __html: singleArticle }}
-            />
-            // </StyledPaper>
+          />
+          // </StyledPaper>
         );
     }
 

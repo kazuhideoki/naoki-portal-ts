@@ -1,27 +1,4 @@
-$margin-bottom-h1: 40px;
-$margin-bottom-h2: $margin-bottom-h1 * 0.8;
-$margin-bottom-h3: $margin-bottom-h1 * 0.6;
-$margin-bottom-h4: $margin-bottom-h1 * 0.4;
-
-
-.content {
-    padding: 10px;
-    color: black;
-    
-    h1 {
-        text-align: center;
-        padding: 15px 0;
-        margin-bottom: 25px;
-    }
-    h2 {
-        margin-bottom: $margin-bottom-h2;
-    }
-    h3 {
-        margin-bottom: $margin-bottom-h3;
-    }
-    h4 {
-        margin-bottom: $margin-bottom-h4;
-    }
+.pArticleModalContent {
     // 以下twenty-sixteenのコピペ
 
     article,
@@ -2694,11 +2671,12 @@ p > video {
 }
 
 // 追加設定↓
-$margin-bottom-h1: 40px;
-$margin-bottom-h2: $margin-bottom-h1 * 0.8;
-$margin-bottom-h3: $margin-bottom-h1 * 0.6;
-$margin-bottom-h4: $margin-bottom-h1 * 0.4;
-$margin-bottom-h5: $margin-bottom-h1 * 0.3;
+$margin-top-bottom: 40px;
+$margin-1: $margin-top-bottom auto;
+$margin-2: $margin-top-bottom * 0.9 auto;
+$margin-3: $margin-top-bottom * 0.6 auto;
+$margin-4: $margin-top-bottom * 0.4 auto;
+$margin-5: $margin-top-bottom * 0.3 auto;
 
 $font-size-h1: 40px;
 $font-size-h2: $font-size-h1 * 0.8;
@@ -2708,35 +2686,48 @@ $font-size-h5: $font-size-h1 * 0.5;
 
 
 
-.content {
+.pArticleModalContent {
     padding: 10px;
     color: black;
     
     h1 {
         text-align: center;
         padding: 15px 0;
-        margin-bottom: 25px;
+        margin: $margin-1;
         font-size: $font-size-h1;
+        
     }
     h2 {
-        margin-bottom: $margin-bottom-h2;
+        margin: $margin-2;
         font-size: $font-size-h2;
+        color: dimgray;
+        padding: .3em 0;
+        border-top: solid 3px dimgray;
+        border-bottom: solid 3px dimgray;
     }
     h3 {
-        margin-bottom: $margin-bottom-h3;
+        margin: $margin-3;
         font-size: $font-size-h3;
+        color: grey;
+        border-left: solid 3px grey;
+        padding-left: .8em;
     }
     h4 {
-        margin-bottom: $margin-bottom-h4;
+        margin: $margin-4;
         font-size: $font-size-h4;
     }
     h5, h6, p {
-        margin-bottom: $margin-bottom-h4;
+        margin: $margin-4;
         font-size: $font-size-h5;
     }
 
+    a {
+        font-weight: bold;
+        font-style: italic;
+    }
+
     img, video {
-        margin-bottom: $margin-bottom-h3;
-        max-height: 80vh;
+        margin: $margin-3;
+        max-height: 70vh;
     }
 }
