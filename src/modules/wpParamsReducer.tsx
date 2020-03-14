@@ -18,7 +18,6 @@ export type WithPayload = Oldest | Num | Tag | Author
 export type WpParamsAction = NoPayload | WithPayload;
 
 export function wpParamsReducer(state: WpParams, action: WpParamsAction) {
-// export function wpParamsReducer(state: WpParams, action: any) {
     let newState: WpParams
     //  カテゴリーで、37は「インフォ」,24は「info」, 187はinstagram
     let categories

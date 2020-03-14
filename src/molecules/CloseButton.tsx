@@ -1,17 +1,25 @@
 import React from 'react'
 import { HighlightOff } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core';
-import { Store } from '../modules/Store';
 
 export const CloseButton = (props:any) => {
-
+    let position = 'absolute'
+    let top = -8
+    let right = -8
+    if(props.fix){
+        position = "fixed";
+        top = 40
+        right = 40
+    }
+    //@ts-ignore
     const StyledHighlightOff = withStyles({
         root: {
-            fontSize: '90px',
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            opacity: '0.7'
+            fontSize: '70px',
+            zIndex: 10,
+            position: position,
+            top: top,
+            right: right,
+            opacity: '0.8',
         }
     })(HighlightOff);
 

@@ -1,5 +1,4 @@
 import React from "react";
-import { ThemeType } from "./modules/ThemeContext";
 import { Store } from "./modules/Store";
 import { Tag, Author } from "./modules/wpParamsReducer";
 import { AppState } from "./modules/Store";
@@ -18,13 +17,13 @@ import { MenuTreatment } from "./PModalModules/MenuTreatment";
 import { TagModal } from "./PModalModules/TagModal";
 import { AuthorModal } from "./PModalModules/AuthorModal";
 import { CloseButton } from "./molecules/CloseButton";
+import { ColorChart } from "./PModalModules/ColorChart";
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const styles = {
-    icon: { fontSize: (themes: ThemeType) => themes.icon },
     dialogContent: {
         padding: "0!important"
     }
@@ -80,14 +79,15 @@ const PModalPresenter = ({
     setParamsAndClose,
 }: Props) => {
     // modalは内容、modalStyle内容に応じてDialogのstyleを変える
-    let modal;
-    let modalStyle
-    const menuDringImg = {
+    let ModalContent = () => <></>
+    let modalStyle = null
+    const size90 = {
         width: "90vw",
         height: "90vh",
         padding: 0,
+        overflow: "hidden",
     }
-    const menuImg = {
+    const size100 = {
         width: "100vw",
         height: "100vh",
         padding: 0,
@@ -96,44 +96,69 @@ const PModalPresenter = ({
     
     switch (setModal) {
         case "magazines":
-            modal = <Magazines icon={classes.icon}/>
+            modalStyle = {
+                width: 500,
+                height: 200,
+                padding: 30
+            }
+            ModalContent = () => <Magazines icon={classes.icon}/>
             break;
         case "wifi":
-            modal = <Wifi/>
+            modalStyle = {
+                width: 500,
+                padding: 30,
+            }
+            ModalContent = () => <Wifi/>
             break;
         case "review":
-            modal = <Review/>
+            modalStyle = {
+                width: 600,
+                height: 500,
+                padding: 30
+            }
+            ModalContent = () => <Review/>
             break;
         case "menus":
-            modal = <Menus icon={classes.icon}  openModal={openModal}/>
+            modalStyle = {
+                width: 500,
+                height: 200,
+                padding: 30
+            }
+            ModalContent = () => <Menus icon={classes.icon} img={classes.img} openModal={openModal}/>
             break;
         case "menuDrink":
-            modalStyle = menuDringImg
-            modal = <MenuDrink menuLists={classes.menuLists}/>
+            modalStyle = {
+              width: "90vw",
+              height: "auto",
+              padding: 0,
+              overflow: "hidden"
+            };
+            ModalContent = () => <MenuDrink/>
             break;
         case "menu":
-            modalStyle = menuImg      
-            modal = <Menu/>
+            modalStyle = size100      
+            ModalContent = () => <Menu/>
         break;
         case "menuTreatment":
-            modalStyle = menuImg     
-            modal = <MenuTreatment/>
+            modalStyle = size100     
+            ModalContent = () => <MenuTreatment/>
         break;
-        // case "setting":
-        //     modal = <p>settingです</p>;
-        // break;
+        case "colorChart":
+            modalStyle = size90      
+            ModalContent = () => <ColorChart/>
+        break;
         case "tag":
-            modal = <TagModal setParamsAndClose={setParamsAndClose}/>
+            ModalContent = () => <TagModal setParamsAndClose={setParamsAndClose}/>
         break;
 
         case "author":
-            modal = <AuthorModal setParamsAndClose={setParamsAndClose} />
+            ModalContent = () => <AuthorModal setParamsAndClose={setParamsAndClose} />
         break;
 
         default:
         console.log("エラーだよ、PModal");
     }
-
+    
     // modalStyleの指定がなければデフォルト値をあてる
     let paperStyle: any = modalStyle || {
         width: 500,
@@ -158,7 +183,7 @@ const PModalPresenter = ({
         >
             <CloseButton onClick={closeModal}/>
             <DialogContent className={classes.dialogContent}>
-                {modal}
+                <ModalContent/>
             </DialogContent>
         </StyledDialog>
     );

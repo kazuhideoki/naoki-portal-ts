@@ -4,7 +4,7 @@ import { ThemeContext } from "../modules/ThemeContext";
 
 
 export const StyledPaper = (props: any) => {
-    const themes = React.useContext(ThemeContext);
+    // const themes = React.useContext(ThemeContext);
     return (
         // <Paper elevation={themes.elevation} {...props}/>
         <Paper variant="outlined" {...props}/>

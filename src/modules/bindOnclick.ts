@@ -15,12 +15,19 @@ export const bindOnclick = (getAndShowLinkPage: GetAndShowLinkPage, ref:any) => 
                 const href = element.getAttribute("href");
     
                 // fetchに必要なslugの部分だけ抽出
-                let cutHref = href ? href.match(/(?<=naokihair\.com\/).+/) : null;
+                // let cutHref = href ? href.match(/(?<=naokihair\.com\/).+/) : null;
+                let cutHref = href ? href.split('.com') : null;
+                console.log(cutHref);
+                
                 // スラッシュや日本語の「ja」などを取り除く
-                let slug = cutHref ? cutHref.toString().replace(/\/|ja\//, "") : null;
+                // let slug = cutHref ? cutHref.toString().replace(/\/|ja\//, "") : null;
+                let slug = cutHref ? cutHref[1].toString().replace(/\/ja\//, "") : null;
+                console.log(slug);
+
+                // ★↑safariで正規表現の一部が対応していなかったので違う方法に。もしかしたらURLによってはうまく行かないかも。
+                
 
                 if (slug) {
-                    console.log(slug);
                     element.onclick = () => getAndShowLinkPage(slug);
                     element.removeAttribute("href");
                 } else {

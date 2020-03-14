@@ -11,20 +11,19 @@ import {
     Person,
     Instagram
 } from "@material-ui/icons";
-import { ThemeContext, ThemeType } from './modules/ThemeContext';
-import { makeStyles } from '@material-ui/core';
+import { ThemeType } from './modules/ThemeContext';
 import { useStylesFactory } from './modules/useStylesFactory';
+import { Grid } from '@material-ui/core';
 
 const styles = {
-    root: {
-        display: "flex",
-        justifyContent: "center",
-    },
     icon: {
         fontSize: (themes: ThemeType) => themes.iconSmall,
     },
     nums: {
-        fontSize: (themes: ThemeType) => themes.iconSmall * 0.8,
+        fontSize: (themes: ThemeType) => themes.iconSmall * 0.7,
+        border: 'none',
+        backgroundColor: 'transparent',
+        margin: 'auto 10px',
     },
 }
 
@@ -146,18 +145,38 @@ const PPaginationPresenter = ({
     }
 
     return (
-        <div className={classes.root}>
-            <HomeButton/>
-            <Tag/>
-            <Author/>
-            <Insta/>
-            <PageNumber/>
-            <Latest/>
-            <Prev/>
-            <DisplayNumbers/>
-            <Next/>
-            <Oldest/>
-        </div>
+        <Grid container justify="center" spacing={1}>
+            <Grid item>
+                <HomeButton />
+            </Grid>
+            <Grid item>
+                <Tag />
+            </Grid>
+            <Grid item>
+                <Author />
+            </Grid>
+            <Grid item>
+                <Insta />
+            </Grid>
+            <Grid item>
+                <PageNumber />
+            </Grid>
+            <Grid item>
+                <Latest />
+            </Grid>
+            <Grid item>
+                <Prev />
+            </Grid>
+            <Grid item>
+                <DisplayNumbers />
+            </Grid>
+            <Grid item>
+                <Next />
+            </Grid>
+            <Grid item>
+                <Oldest />
+            </Grid>
+        </Grid>
     );
 };
 

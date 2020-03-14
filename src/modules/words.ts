@@ -1,13 +1,13 @@
 export const pfooter = {
     en: {
         lang: '日本語',
-        magazines: "magazines",
-        review: 'review',
-        menu: 'menu',
+        magazines: "Magazines",
+        review: 'Review',
+        menu: 'Menu',
         allServices: 'All services',
         treatmentMenu: 'Treatment menu',
         drinkMenu: 'Drink menu',
-        registration: 'registration',
+        registration: 'Registration',
     },
     ja: {
         lang:'English',
@@ -19,7 +19,7 @@ export const pfooter = {
         drinkMenu:'ドリンク、メニュー',
         registration:'登録',
     }
-}
+} as const
 
 export const magazines = {
     en: {
@@ -30,5 +30,31 @@ export const magazines = {
         magzter: '英語の雑誌',
         japaneseMagazine: "楽天マガジン",
     }
-}
- 
+} as const
+
+export const wifi = {
+    en: {
+        password: 'Password',
+    },
+    ja: {
+        password: 'パスワード',
+    }
+} as const
+
+export const menus = {
+    en: {
+        beverage: 'Beverage',
+        service:  'Service Menu',
+        treatment: 'Treatment Menu',
+        colorChart: 'Colour',
+
+    },
+    ja: {
+        beverage: 'お飲み物',
+        service:  'メニュー',
+        treatment: 'トリートメントメニュー',
+        colorChart: 'カラーチャート',
+
+
+    },
+} as const

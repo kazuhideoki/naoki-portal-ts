@@ -27,9 +27,6 @@ const styles = {
       height: "100%",
 
     },
-    icon: {
-      fontSize: (themes: ThemeType) => themes.icon
-    }
   }
 
 type Props = {
@@ -52,12 +49,6 @@ const PFooterContainer = ({presenter}: any) => {
     const openModal = (modalName: string) =>
       dispatchAppState({ type: "OPEN_MODAL", payload: modalName });
 
-    // let w
-    // if (wpParams.isJa) {
-    //      w = pfooter.ja
-    // }else{
-    //      w = pfooter.en
-    // }
     const w = useWordsChange(pfooter)
 
     const props = {
@@ -74,7 +65,8 @@ const PFooterContainer = ({presenter}: any) => {
 const PFooterPresenter = ({ w, classes, themes, changeLang, openModal }: Props) => {
    
     return (
-    <StyledPaper className={classes.root}>
+    // <div className={classes.root}>
+    <div className={classes.root}>
         <PPagination/>
         <Grid container justify="center" spacing={2}>
             <Grid item>
@@ -82,7 +74,6 @@ const PFooterPresenter = ({ w, classes, themes, changeLang, openModal }: Props) 
                     icon={Translate}
                     onClick={() => changeLang()}
                     color="primary"
-                    classNameIcon={classes.icon}
                     text={w.lang}
                 />
             </Grid>
@@ -91,7 +82,6 @@ const PFooterPresenter = ({ w, classes, themes, changeLang, openModal }: Props) 
                     icon={ImportContactsTwoTone}
                     onClick={() => openModal("magazines")}
                     fontSize="large"
-                    classNameIcon={classes.icon}
                     text={w.magazines}
                 />
             </Grid>
@@ -99,7 +89,6 @@ const PFooterPresenter = ({ w, classes, themes, changeLang, openModal }: Props) 
                 <IconAndText
                     icon={SignalWifi3BarTwoTone}
                     onClick={() => openModal("wifi")}
-                    classNameIcon={classes.icon}
                     text="Wifi"
                 />
             </Grid>
@@ -107,7 +96,6 @@ const PFooterPresenter = ({ w, classes, themes, changeLang, openModal }: Props) 
                 <IconAndText
                     icon={ThumbUpTwoTone}
                     onClick={() => openModal("review")}
-                    classNameIcon={classes.icon}
                     text={w.review}
                 />
             </Grid>
@@ -115,7 +103,6 @@ const PFooterPresenter = ({ w, classes, themes, changeLang, openModal }: Props) 
                 <IconAndText
                     icon={ListAltTwoTone}
                     onClick={() => openModal("menus")}
-                    classNameIcon={classes.icon}
                     text={w.menu}
                 />
             </Grid>
@@ -123,13 +110,13 @@ const PFooterPresenter = ({ w, classes, themes, changeLang, openModal }: Props) 
                 <a href="https://karte.smart-recept.jp/staff/login/">
                     <IconAndText
                         icon={PersonAddTwoTone}
-                        classNameIcon={classes.icon}
                         text={w.registration}
                     />
                 </a>
             </Grid>
         </Grid>
-    </StyledPaper>
+    {/* </div> */}
+    </div>
     );
 };
 export const PFooter = () => (

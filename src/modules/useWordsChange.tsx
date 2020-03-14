@@ -1,15 +1,17 @@
 import React from 'react'
 import { Store } from './Store';
 
-export const useWordsChange = (words: any) => {
+type Words<E, J> = {
+    en: E
+    ja: J 
+}
+
+export const useWordsChange = <E, J>(words: Words<E, J>) => {
     const { wpParams } = React.useContext(Store);
 
-    let w
     if (wpParams.isJa) {
-        w = words.ja
+        return words.ja
     } else {
-        w = words.en
+        return words.en
     }
-
-    return w
 }

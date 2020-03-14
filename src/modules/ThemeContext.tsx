@@ -13,7 +13,7 @@ const pHeaderHeight = 7
 
 const pFooterMarginTop = 1
 const pFooterWidth = screenWidth - portalPadding * 2
-const pFooterHeight = 22
+const pFooterHeight = 23
 
 const pMainMargin = 1
 const pMainWidth = screenWidth - pMainMargin * 2
@@ -44,8 +44,8 @@ const themes = {
    
 
     // fontSize
-    icon: 90,
-    iconSmall : 30,
+    icon: 85,
+    iconSmall : 38,
 };
 
 export type ThemeType = typeof themes;

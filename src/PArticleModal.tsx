@@ -13,6 +13,8 @@ import {
 } from "@material-ui/core";
 import { StyledPaper } from './StyledComponent/StyledPaper';
 import { CloseButton } from './molecules/CloseButton';
+import { useStylesFactory } from './modules/useStylesFactory';
+import "./PArticleModal.scss";
 
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -26,10 +28,16 @@ const StyledDialog = withStyles({
     }
 })(Dialog);
 
-export type SetSingleArticle = (data: any) => void
-export type GetAndShowLinkPage = (data: any) => void
+const styles = {
+//   dialogRoot: {
+//       padding: 0
+//   }
+};
 
+export type SetSingleArticle = (data: any) => void
+export type GetAndShowLinkPage = (slug: string) => Promise<void>
 type Props = {
+    classes: Record<string, string>
     wpData: WpData
     articleModal: [{
         title: string;
@@ -46,6 +54,7 @@ type Props = {
 };
 
 const PArticleModalContainer = ({presenter}:any) => {
+    const classes = useStylesFactory(styles)
     const {
         wpData,
         dispatchWpData,
@@ -76,6 +85,7 @@ const PArticleModalContainer = ({presenter}:any) => {
     }
 
     const props = {
+        classes,
         wpData,
         articleModal,
         isArticleModalOpen,
@@ -87,6 +97,7 @@ const PArticleModalContainer = ({presenter}:any) => {
     return presenter(props);
 }
 const PArticleModalPresenter = ({
+    classes,
     wpData,
     articleModal,
     isArticleModalOpen,
@@ -103,14 +114,15 @@ const PArticleModalPresenter = ({
         singleArticle = "<h1>" + article.title + "</h1>" + article.content;
  
         content = (
-            <StyledPaper>
+            // <StyledPaper>
+            // cssは別ファイルPArticleModal.scssに記述。内容がfetchしたものを直接埋め込むので。
             <div
             ref={ArticleRef}
             id="p_article_modal"
-            className="content"
+            className={`content ${classes.root}`}
             dangerouslySetInnerHTML={{ __html: singleArticle }}
             />
-            </StyledPaper>
+            // </StyledPaper>
         );
     }
 
@@ -125,10 +137,8 @@ const PArticleModalPresenter = ({
         TransitionComponent={Transition}
         onClose={closeArticleModal}
         >
-            <CloseButton onClick={closeArticleModal} />
-            <DialogContent>
+            <CloseButton onClick={closeArticleModal} fix/>
                 <DialogContentText>{(!isLoadingArticleModal) ? content : null}</DialogContentText>
-            </DialogContent>
         </StyledDialog>
     );
 };

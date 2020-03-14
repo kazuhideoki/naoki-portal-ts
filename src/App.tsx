@@ -103,27 +103,25 @@ const AppPresenter = ({
 
     return (
         <div className={classes.root}>
-
-      <Grid
-                // className={classes.root}
-        spacing={0}
-        container
-        direction="column"
-        justify="center"
-        alignItems="stretch"
-      >
-        <Grid item className={classes.header}>
-          <PHeader />
-        </Grid>
-        <Grid item className={classes.main}>
-          {!isLoading ? <PMain /> : <Skeleton />}
-        </Grid>
-        <Grid item className={classes.footer}>
-          <PFooter />
-        </Grid>
-        <PArticleModal />
-        <PModal />
-      </Grid>
+            <Grid
+                spacing={0}
+                container
+                direction="column"
+                justify="center"
+                alignItems="stretch"
+            >
+                <Grid item className={classes.header}>
+                    <PHeader />
+                </Grid>
+                <Grid item className={classes.main}>
+                    {!isLoading ? <PMain /> : <Skeleton />}
+                </Grid>
+                <Grid item className={classes.footer}>
+                    <PFooter />
+                </Grid>
+                    <PArticleModal />
+                    <PModal />
+            </Grid>
         </div>
 
     );

@@ -1,12 +1,10 @@
 import React from "react";
-import { ThemeContext } from "./modules/ThemeContext";
 import { Store, WpData, WpParams } from "./modules/Store";
 import { formatDate } from "./modules/organizeData";
 import { sortDataPosts, SortDataPosts, setAuthorName } from "./modules/organizeData";
 import { staffImg } from "./img/staff/staffImg";
 
-import { Grid, Paper, Card, CardActionArea, CardMedia, CardContent, Typography, CardActions, Button } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { Grid, Card, CardActionArea, CardContent, Typography } from "@material-ui/core";
 import { pickStaffImg } from "./modules/pickStaffImg";
 import { StyledPaper } from "./StyledComponent/StyledPaper";
 import { useStylesFactory } from "./modules/useStylesFactory";
@@ -99,14 +97,6 @@ const PMainPresenter = ({
     if (articles && wpParams.categories === 187) {
         displayArticles = articles.map((value, key: number) => {
             return (
-            // <Grid item key={key} className={classes.item}>
-            //         <StyledPaper
-            //         className={classes.article}
-            //     >
-            //         <h3>{value.date}</h3>
-            //         <div dangerouslySetInnerHTML={{ __html: value.content }} />
-            //         </StyledPaper>
-            // </Grid>
             <Grid item key={key} className={classes.item}>
                     <Card
                         variant="outlined"
@@ -123,7 +113,7 @@ const PMainPresenter = ({
     //   通常の記事一覧の表示
     } else if (articles) {
         displayArticles = articles.map((value, key: number) => {
-
+            
             const num = articles[key].authorId  
             const img = pickStaffImg(staffImg, num)
         
@@ -161,11 +151,10 @@ const PMainPresenter = ({
 
     // instaのiframeの表示サイズを変更させる
     React.useEffect(() => {
-        console.log(instaRef.current);
+        // console.log(instaRef.current);
         if (wpParams.categories === 187) {
             //@ts-ignore
             const iframe = instaRef.current.getElementsByClassName("iframe-class")
-            console.log(iframe);
             Array.prototype.forEach.call(iframe, function (element: any) {
                 element.style.transform = "scale(1.2)"
                 element.style.transformOrigin = "left"
