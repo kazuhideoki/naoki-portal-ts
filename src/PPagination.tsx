@@ -25,10 +25,15 @@ const styles = {
         backgroundColor: 'transparent',
         margin: 'auto 10px',
     },
+    pagination: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: 450
+    }
 }
 
 type Props = {
-    classes: Record<"root" | "icon" | "nums", string>
+    classes: Record<string, string>
     currentPage: number
     openModal: (modalName: string) => void
     setParams: (type: any) => void
@@ -144,8 +149,8 @@ const PPaginationPresenter = ({
         return <>{nums}</>
     }
 
-    return (
-        <Grid container justify="center" spacing={1}>
+    const SelectParams = () => (
+        <>
             <Grid item>
                 <HomeButton />
             </Grid>
@@ -158,24 +163,24 @@ const PPaginationPresenter = ({
             <Grid item>
                 <Insta />
             </Grid>
-            <Grid item>
-                <PageNumber />
-            </Grid>
-            <Grid item>
-                <Latest />
-            </Grid>
-            <Grid item>
-                <Prev />
-            </Grid>
-            <Grid item>
-                <DisplayNumbers />
-            </Grid>
-            <Grid item>
-                <Next />
-            </Grid>
-            <Grid item>
-                <Oldest />
-            </Grid>
+        </>
+    )
+
+    const Pagination = () => (
+        <Grid item className={classes.pagination}>
+            <Latest />
+            <Prev />
+            <DisplayNumbers />
+            <Next />
+            <Oldest />
+        </Grid>
+    )
+
+    return (
+        <Grid container justify="center" spacing={1}>
+            <SelectParams />
+            <PageNumber />
+            <Pagination />
         </Grid>
     );
 };
