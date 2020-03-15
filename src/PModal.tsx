@@ -25,8 +25,9 @@ const Transition = React.forwardRef<unknown, TransitionProps>(function Transitio
 
 const styles = {
     dialogContent: {
-        padding: "0!important"
-    }
+        padding: "0!important",
+        
+    },
 }
 
 type Props = {
@@ -148,11 +149,27 @@ const PModalPresenter = ({
             ModalContent = () => <ColorChart/>
         break;
         case "tag":
-            ModalContent = () => <TagModal setParamsAndClose={setParamsAndClose}/>
+
+            ModalContent = () => (
+              <TagModal
+                setParamsAndClose={setParamsAndClose}
+                className={classes.tagAuthorRoot}
+              />
+            );
         break;
 
         case "author":
-            ModalContent = () => <AuthorModal setParamsAndClose={setParamsAndClose} />
+            modalStyle = {
+              width: 600,
+              height: 350,
+              padding: 30
+            };
+            ModalContent = () => (
+              <AuthorModal
+                setParamsAndClose={setParamsAndClose}
+                className={classes.tagAuthorRoot}
+              />
+            );
         break;
 
         default:

@@ -8,8 +8,11 @@ import { useStylesFactory } from '../modules/useStylesFactory';
 
 const styles = {
     staffImg: {
-        width: 50
+        width: 70
     },
+    button: {
+        fontSize: '1.5em',
+    }
 }
 
 export const AuthorModal = (props: any) => {
@@ -28,10 +31,10 @@ export const AuthorModal = (props: any) => {
         const img = pickStaffImg(staffImg, payload)
         const type = "AUTHOR"
         return (
-            <Button key={key} onClick={() => props.setParamsAndClose({ type, payload })}>
+            <Button className={classes.button} key={key} onClick={() => props.setParamsAndClose({ type, payload })}>
                 <img src={img} alt="" className={classes.staffImg} />{value.name}
             </Button>
         )
     });
-    return <>{auhtorsWrap}</>
+    return <div className={props.className}>{auhtorsWrap}</div>;
 }
