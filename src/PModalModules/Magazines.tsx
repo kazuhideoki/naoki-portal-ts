@@ -24,20 +24,22 @@ export const Magazines = (props: any) => {
     const rmagazineUrl = "rmagazine://";
 
     return (
-        <div className={classes.root}>
-            <IconAndText
-                img={magzter}
-                text={w.magzter}
-                className={classes.icon}
-                //   最初aタグでアプリへの遷移を試みたが内蔵ブラウザが開いてしまったのでonClickにlocation.hrefを変える関数を渡す。
-                onClick={() => (window.location.href = magzterUrl)}
-            />
-            <IconAndText
-                img={rakutenMagazine}
-                text={w.japaneseMagazine}
-                className={classes.icon}
-                onClick={() => (window.location.href = rmagazineUrl)}
-            />
-        </div>
+      <div className={classes.root}>
+        <IconAndText
+          img={magzter}
+          text={w.magzter}
+          className={classes.icon}
+          //   最初aタグでアプリへの遷移を試みたが内蔵ブラウザが開いてしまったのでonClickにlocation.hrefを変える関数を渡す。
+          onClick={() => (window.location.href = magzterUrl)}
+          onClose
+        />
+        <IconAndText
+          img={rakutenMagazine}
+          text={w.japaneseMagazine}
+          className={classes.icon}
+          onClick={() => (window.location.href = rmagazineUrl)}
+          onClose
+        />
+      </div>
     );
 }

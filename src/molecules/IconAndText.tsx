@@ -2,6 +2,8 @@ import React from 'react'
 import { Typography } from '@material-ui/core'
 import { useStylesFactory } from '../modules/useStylesFactory'
 import { ThemeType } from '../modules/ThemeContext'
+import { StrikethroughS } from '@material-ui/icons'
+import { Store } from '../modules/Store'
 
 const styles = {
     root : {
@@ -17,12 +19,23 @@ const styles = {
 
 export const IconAndText = (props:any) => {
     const classes = useStylesFactory(styles)
+    const {dispatchAppState} = React.useContext(Store)
+    let onClick: () => void
+    if (props.onClose && props.onClick) {
+        onClick = () => {
+            dispatchAppState({type: 'CLOSE_MODAL'})
+            props.onClick()
+        } 
+    } else if(props.onClick) {
+        onClick = () => props.onClick()
+    }
 
     let icon 
     // svgのアイコンはiconに入れる
     if (props.icon) {
         icon = <props.icon
-            onClick={(props.onClick) ? () => props.onClick() : null}
+            // onClick={(props.onClick) ? () => props.onClick() : null}
+            onClick={() => onClick()}
             className={classes.icon}
             {...props}
         />
@@ -32,7 +45,7 @@ export const IconAndText = (props:any) => {
             src={props.img}
             alt=""
             // onClick={() => props.onClick()}
-            onClick={() => props.onClick()}
+            onClick={() => onClick()}
             className={`${classes.img} ${props.className}`}        />
     }
 
