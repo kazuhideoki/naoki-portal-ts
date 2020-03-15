@@ -3,10 +3,6 @@ import { Store } from "./modules/Store";
 import { WpParamsAction } from "./modules/wpParamsReducer";
 import {
     Home,
-    FirstPage,
-    NavigateBefore,
-    NavigateNext,
-    LastPage,
     Label,
     Person,
     Instagram
@@ -16,7 +12,10 @@ import { useStylesFactory } from './modules/useStylesFactory';
 import { Grid } from '@material-ui/core';
 
 import { DisplayNumbers } from './PPaginationModules/DisplayNumbers';
+import { Next } from "./PPaginationModules/Next";
 import { Latest } from './PPaginationModules/Latest';
+import { Oldest } from "./PPaginationModules/Oldest";
+import { Prev } from './PPaginationModules/Prev';
 
 const styles = {
     icon: {
@@ -105,61 +104,6 @@ const PPaginationPresenter = ({
         return <p className={classes.nums}>【 {currentPage}/{totalPages} 】</p>
     }
 
-
-    const Prev = () => {
-        const arg = { type: "PREV" };
-        let onClick;
-        let disable;
-        if (!(currentPage === 1)) {
-          onClick = () => setParams(arg);
-          disable = null;
-        } else {
-          onClick = undefined;
-          disable = classes.disable;
-        } 
-        return (
-            <NavigateBefore
-            onClick={onClick}
-            className={`${classes.icon} ${disable}`}
-            />
-        );
-    };
-
-    const Next = () => {
-        const arg = { type: "NEXT" };
-        let onClick;
-        let disable;
-        if (!(currentPage === totalPages)) {
-          onClick = () => setParams(arg);
-          disable = null;
-        } else {
-          onClick = undefined;
-          disable = classes.disable;
-        } 
-        return (
-            <NavigateNext
-            onClick={onClick}
-            className={`${classes.icon} ${disable}`}
-            />
-        );
-    };
-
-    const Oldest = () => {
-        const arg = { type: "OLDEST", payload: totalPages };
-        let onClick;
-        let disable;
-        if (currentPage < totalPages - 2 && totalPages > 3) {
-          onClick = () => setParams(arg);
-          disable = null;
-        } else {
-          onClick = undefined;
-          disable = classes.disable;
-        } 
-        return (
-            <LastPage onClick={onClick} className={`${classes.icon} ${disable}`} />
-        );
-    };
-
     const SelectParams = () => (
         <>
             <Grid item>
@@ -179,11 +123,27 @@ const PPaginationPresenter = ({
 
     const Pagination = () => (
       <Grid item className={classes.pagination}>
-        <Latest setParams={setParams} classesDisable={classes.disable} classesIcon={classes.icon}/>
-        <Prev />
+        <Latest
+          setParams={setParams}
+          classesDisable={classes.disable}
+          classesIcon={classes.icon}
+        />
+        <Prev
+          setParams={setParams}
+          classesDisable={classes.disable}
+          classesIcon={classes.icon}
+        />
         <DisplayNumbers setParams={setParams} />
-        <Next />
-        <Oldest />
+        <Next
+          setParams={setParams}
+          classesDisable={classes.disable}
+          classesIcon={classes.icon}
+        />
+        <Oldest
+          setParams={setParams}
+          classesDisable={classes.disable}
+          classesIcon={classes.icon}
+        />
       </Grid>
     );
 
