@@ -9,7 +9,8 @@ const styles = {
     fontSize: (themes: ThemeType) => themes.iconSmall * 0.7,
     border: "none",
     backgroundColor: "transparent",
-    margin: "auto 10px"
+    margin: "auto 10px",
+    padding: 5
   },
   numsCurrent: {
     fontWeight: "bold"
