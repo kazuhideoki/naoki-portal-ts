@@ -17,20 +17,26 @@ import { Grid } from '@material-ui/core';
 
 const styles = {
     icon: {
-        fontSize: (themes: ThemeType) => themes.iconSmall,
+        fontSize: (themes: ThemeType) => themes.iconSmall
     },
     nums: {
         fontSize: (themes: ThemeType) => themes.iconSmall * 0.7,
-        border: 'none',
-        backgroundColor: 'transparent',
-        margin: 'auto 10px',
+        border: "none",
+        backgroundColor: "transparent",
+        margin: "auto 10px"
+    },
+    numsCurrent: {
+        fontWeight: 'bold'
+    },
+    disable: {
+        color: "whitesmoke"
     },
     pagination: {
-        display: 'flex',
-        justifyContent: 'center',
-        width: 450
+        display: "flex",
+        justifyContent: "center",
+        width: 400
     }
-}
+};
 
 type Props = {
     classes: Record<string, string>
@@ -90,35 +96,79 @@ const PPaginationPresenter = ({
         return <p className={classes.nums}>【 {currentPage}/{totalPages} 】</p>
     }
 
-    let Latest = () => <></>;
-    let Prev = () => <></>;
-    let Next = () => <></>;
-    let Oldest = () => <></>
     //  ページ数が3より大きい場合latestとoldestを表示
-    if (currentPage > 3 && totalPages > 3) {
-        Latest = () => {
-            const arg = { type: "LATEST" };
-            return <FirstPage onClick={() => setParams(arg)} className={classes.icon}/>;
-        };
-    }
-    if (!(currentPage === 1)) {
-        Prev = () => {
-            const arg = { type: "PREV" };
-            return <NavigateBefore onClick={() => setParams(arg)} className={classes.icon}/>;
-        }
-    }
-    if (!(currentPage === totalPages)) {
-        Next = () => {
-            const arg = { type: "NEXT"};
-            return <NavigateNext onClick={() => setParams(arg)} className={classes.icon}/>;
-        }
-    }
-    if (currentPage < totalPages - 2 && totalPages > 3) {
-        Oldest = () => {
-            const arg = { type: "OLDEST", payload: totalPages };
-            return <LastPage onClick={() => setParams(arg)} className={classes.icon}/>;
-        }
-    }
+    const Latest = () => {
+        const arg = { type: "LATEST" };
+        let onClick
+        let disable
+        if (currentPage > 3 && totalPages > 3) {
+            onClick = () => setParams(arg)
+            disable = null
+        } else{
+            onClick = undefined
+            disable = classes.disable;
+        } 
+        return (
+            <FirstPage
+            onClick={onClick}
+            className={`${classes.icon} ${disable}`}
+            />
+        );
+    };
+
+    const Prev = () => {
+        const arg = { type: "PREV" };
+        let onClick;
+        let disable;
+        if (!(currentPage === 1)) {
+          onClick = () => setParams(arg);
+          disable = null;
+        } else {
+          onClick = undefined;
+          disable = classes.disable;
+        } 
+        return (
+            <NavigateBefore
+            onClick={onClick}
+            className={`${classes.icon} ${disable}`}
+            />
+        );
+    };
+
+    const Next = () => {
+        const arg = { type: "NEXT" };
+        let onClick;
+        let disable;
+        if (!(currentPage === totalPages)) {
+          onClick = () => setParams(arg);
+          disable = null;
+        } else {
+          onClick = undefined;
+          disable = classes.disable;
+        } 
+        return (
+            <NavigateNext
+            onClick={onClick}
+            className={`${classes.icon} ${disable}`}
+            />
+        );
+    };
+
+    const Oldest = () => {
+        const arg = { type: "OLDEST", payload: totalPages };
+        let onClick;
+        let disable;
+        if (currentPage < totalPages - 2 && totalPages > 3) {
+          onClick = () => setParams(arg);
+          disable = null;
+        } else {
+          onClick = undefined;
+          disable = classes.disable;
+        } 
+        return (
+            <LastPage onClick={onClick} className={`${classes.icon} ${disable}`} />
+        );
+    };
 
     const number1 = currentPage - 2;
     const number2 = currentPage - 1;
@@ -135,7 +185,14 @@ const PPaginationPresenter = ({
             } else if (num > totalPages) {
                 return "";
             } else if (num === currentPage) {
-                return <button key={num} className={classes.icon}>{num}</button>;
+                return (
+                  <button
+                    key={num}
+                    className={`${classes.nums} ${classes.numsCurrent}`}
+                  >
+                    {num}
+                  </button>
+                );
             }
 
             const arg = { type: "NUM", payload: num };
