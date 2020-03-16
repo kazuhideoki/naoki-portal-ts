@@ -55,6 +55,7 @@ export const Menus = (props: any) => {
             <IconAndText
             icon={Web}
             text={w.colorChart}
+            onClose
             />
         </a>
       </div>

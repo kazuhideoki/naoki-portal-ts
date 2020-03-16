@@ -17,7 +17,7 @@ import { Latest } from './PPaginationModules/Latest';
 import { Oldest } from "./PPaginationModules/Oldest"; 
 import { Prev } from './PPaginationModules/Prev';
 
-
+ 
 const styles = {
     icon: {
         fontSize: (themes: ThemeType) => themes.iconSmall

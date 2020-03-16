@@ -28,6 +28,8 @@ export const IconAndText = (props:any) => {
         } 
     } else if(props.onClick) {
         onClick = () => props.onClick()
+    } else if(props.onClose) {
+        onClick = () => dispatchAppState({ type: "CLOSE_MODAL" });
     }
 
     let icon 
