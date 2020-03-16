@@ -11,13 +11,13 @@ import { ThemeType } from './modules/ThemeContext';
 import { useStylesFactory } from './modules/useStylesFactory';
 import { Grid } from '@material-ui/core';
 
-import { DisplayNumbers } from './PPaginationModules/DisplayNumbers';
-import { Next } from "./PPaginationModules/Next";
-import { Latest } from './PPaginationModules/Latest';
-import { Oldest } from "./PPaginationModules/Oldest"; 
 import { Prev } from './PPaginationModules/Prev';
+import { Latest } from './PPaginationModules/Latest';
+import { DisplayNumbers } from './PPaginationModules/DisplayNumbers';
+import { Oldest } from './PPaginationModules/Oldest';
+import { Next } from './PPaginationModules/Next';
 
- 
+
 const styles = {
     icon: {
         fontSize: (themes: ThemeType) => themes.iconSmall

@@ -2,7 +2,6 @@ import React from 'react'
 import { Typography } from '@material-ui/core'
 import { useStylesFactory } from '../modules/useStylesFactory'
 import { ThemeType } from '../modules/ThemeContext'
-import { StrikethroughS } from '@material-ui/icons'
 import { Store } from '../modules/Store'
 
 const styles = {
