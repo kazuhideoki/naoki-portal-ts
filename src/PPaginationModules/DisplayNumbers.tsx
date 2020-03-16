@@ -46,7 +46,7 @@ export const DisplayNumbers = (props: pageArrowProps) => {
     return (
       <button key={num} onClick={() => props.setParams(arg)} className={classes.nums}>
         {num}
-      </button>
+      </button> 
     );
   });
 

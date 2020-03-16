@@ -2,12 +2,13 @@ import React from "react";
 import { NavigateBefore } from "@material-ui/icons";
 import { pageArrowProps } from "../PPagination";
 import { Store } from "../modules/Store";
+import { WpParamsAction } from "../modules/wpParamsReducer";
 
 export const Prev = (props: pageArrowProps) => {
   const { wpParams } = React.useContext(Store);
   const currentPage = wpParams.currentPage;
 
-  const arg = { type: "PREV" };
+  const arg: WpParamsAction = { type: "PREV" };
   let onClick;
   let disable;
   if (!(currentPage === 1)) {
