@@ -2730,4 +2730,8 @@ $font-size-h5: $font-size-h1 * 0.5;
         margin: $margin-3;
         max-height: 70vh;
     }
+
+    iframe {
+        height: 80vh;
+    }
 }
