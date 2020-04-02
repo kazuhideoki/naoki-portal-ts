@@ -22,7 +22,8 @@ export const AuthorModal = (props: any) => {
     const authors = sortDataUsers(wpData.users);
 
     let auhtorsWrap = authors.filter(function (value) {
-        if (value.name === "Naoki Hair Dressing") {
+        // 表示させない人を省く
+        if (value.name === "Naoki Hair Dressing" || value.name === "Kenji" || value.name === "meiko") {
             return false; // skip
         }
         return true;
