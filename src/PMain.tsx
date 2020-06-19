@@ -116,6 +116,8 @@ const PMainPresenter = ({
             
             const num = articles[key].authorId  
             const img = pickStaffImg(staffImg, num)
+            console.log(img);
+            
         
             return (
                 <Grid item key={key} className={classes.item}>
